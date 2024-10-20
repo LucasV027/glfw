@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.5)
-project(GLFW)
+project(glfw-project)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(GLFW src/main.cpp
+add_executable(${PROJECT_NAME} src/main.cpp
         src/glApplication.cpp
         src/glApplication.h
         src/glProgram.h
