@@ -5,6 +5,7 @@
 * https://alandefreitas.github.io/moderncpp/guis/opengl-glfw/
 * https://www.glfw.org/docs/3.3/quick.html
 * https://antongerdelan.net/opengl/
+* https://learnopengl.com/Getting-started/Hello-Triangle
 
 ## Project Templates
 
