@@ -7,16 +7,14 @@
 #include "glProgram.h"
 
 #include <glm/glm.hpp>
+
+#include "glData.h"
 #include "glm/gtc/type_ptr.hpp"
 
 
 glApplication::glApplication(const int width, const int height, const std::string &title)
-    : title(title),
-      width(width),
-      height(height),
-      pointsVBO(0),
-      colorsVBO(0),
-      vao(0) {
+    : title(title), width(width), height(height),
+      VBO(0), VAO(0), EBO(0) {
     glfwSetErrorCallback([](const int error, const char *description) {
         std::cerr << error << ": " << description << std::endl;
     });
@@ -40,38 +38,29 @@ glApplication::glApplication(const int width, const int height, const std::strin
             glfwSetWindowShouldClose(window, GLFW_TRUE);
     });
 
-
-    //   glfwSetWindowSizeCallback(window, [](GLFWwindow *window, const int newWidth, const int newHeight) {
-    //       std::cout << newWidth << " " << newHeight << std::endl;
-    //  });
-
     glfwMakeContextCurrent(window);
     gladLoadGL();
     glfwSwapInterval(1);
 
-    // OpenGl
 
-    // VBOs
-    glGenBuffers(1, &pointsVBO);
-    glBindBuffer(GL_ARRAY_BUFFER, pointsVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(points), points, GL_STATIC_DRAW);
+    glGenBuffers(1, &VBO);
+    glGenBuffers(1, &EBO);
+    glGenVertexArrays(1, &VAO);
 
-    glGenBuffers(1, &colorsVBO);
-    glBindBuffer(GL_ARRAY_BUFFER, colorsVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW);
+    glBindVertexArray(VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(glData::cubeVertices), glData::cubeVertices, GL_STATIC_DRAW);
 
-    // VAO
-    glGenVertexArrays(1, &vao);
-    glBindVertexArray(vao);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(glData::cubeIndices), glData::cubeIndices, GL_STATIC_DRAW);
 
-    glBindBuffer(GL_ARRAY_BUFFER, pointsVBO);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), static_cast<void *>(nullptr));
     glEnableVertexAttribArray(0);
 
-    glBindBuffer(GL_ARRAY_BUFFER, colorsVBO);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
-    glEnableVertexAttribArray(1);
+    // Draw empty triangles
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
+    // Optimizations
     glEnable(GL_CULL_FACE); // cull face
     glCullFace(GL_BACK); // cull back face
     glFrontFace(GL_CCW); // GL_CCW for counter clock-wise
@@ -80,6 +69,12 @@ glApplication::glApplication(const int width, const int height, const std::strin
     const auto fsPath = std::filesystem::path("../shaders/main.frag");
     const auto vsPath = std::filesystem::path("../shaders/main.vert");
     program.load(vsPath, fsPath);
+}
+
+
+glApplication::~glApplication() {
+    glfwDestroyWindow(window);
+    glfwTerminate();
 }
 
 void glApplication::mainLoop() {
@@ -91,9 +86,13 @@ void glApplication::mainLoop() {
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+
         glUseProgram(program.get());
-        glBindVertexArray(vao);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glUniform1f(glGetUniformLocation(program.get(), "iTime"), static_cast<float>(glfwGetTime()));
+
+        glBindVertexArray(VAO);
+        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr);
+
 
         auto currentTime = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double> elapsed = currentTime - lastReloadTime;
@@ -108,10 +107,6 @@ void glApplication::mainLoop() {
     }
 }
 
-glApplication::~glApplication() {
-    glfwDestroyWindow(window);
-    glfwTerminate();
-}
 
 void glApplication::updateFpsCounter() {
     static double previousSeconds = glfwGetTime();

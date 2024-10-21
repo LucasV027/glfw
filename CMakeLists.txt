@@ -7,7 +7,8 @@ add_executable(${PROJECT_NAME} src/main.cpp
         src/glApplication.cpp
         src/glApplication.h
         src/glProgram.h
-        src/glProgram.cpp)
+        src/glProgram.cpp
+        src/glData.h)
 
 # dependencies
 include(FetchContent)
