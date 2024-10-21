@@ -1,6 +1,7 @@
 #pragma once
 
-namespace glData {
+
+namespace lgl::Data {
     struct point {
         float x, y, z;
     };
@@ -57,3 +58,4 @@ namespace glData {
         7, 4, 3
     };
 }
+
