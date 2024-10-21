@@ -14,7 +14,7 @@
 namespace lgl {
     Application::Application(const int width, const int height, const std::string &title)
         : title(title), width(width), height(height),
-          VBO(0), VAO(0), EBO(0) {
+          VBO(0), CBO(0), VAO(0), EBO(0) {
         glfwSetErrorCallback([](const int error, const char *description) {
             std::cerr << error << ": " << description << std::endl;
         });
@@ -43,22 +43,31 @@ namespace lgl {
         glfwSwapInterval(1);
 
 
+        // Vertex positions buffer
         glGenBuffers(1, &VBO);
+        // Indices buffer
         glGenBuffers(1, &EBO);
+        // Vao
         glGenVertexArrays(1, &VAO);
 
         glBindVertexArray(VAO);
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(Data::cubeVertices), Data::cubeVertices, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(Data::cubeVerticesWithColors), Data::cubeVerticesWithColors,
+                     GL_STATIC_DRAW);
+
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Data::cubeIndices), Data::cubeIndices, GL_STATIC_DRAW);
 
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), static_cast<void *>(nullptr));
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Data::Vertex), reinterpret_cast<const void *>(0));
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Data::Vertex),
+                              reinterpret_cast<const void *>(sizeof(Data::Point)));
         glEnableVertexAttribArray(0);
+        glEnableVertexAttribArray(1);
+
 
         // Draw empty triangles
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
         // Optimizations
         glEnable(GL_CULL_FACE); // cull face

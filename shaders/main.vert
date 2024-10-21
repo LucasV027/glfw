@@ -1,8 +1,11 @@
 #version 330 core
 
-layout (location = 0) in vec3 aPos;
+layout (location = 0) in vec3 vertexPos;
+layout (location = 1) in vec3 vertexColor;
 
 uniform float iTime;
+
+out vec3 color;
 
 mat3 Rw(vec3 w, float thetha)
 {
@@ -21,5 +24,6 @@ mat3 Rw(vec3 w, float thetha)
 
 void main()
 {
-    gl_Position = vec4(aPos * Rw(vec3(0.1, 0.3, 1.), iTime), 1.0);
+    color = vertexColor;
+    gl_Position = vec4(vertexPos * Rw(vec3(1., 1., 1.), iTime), 1.0);
 }

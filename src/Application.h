@@ -24,6 +24,7 @@ namespace lgl {
         GLFWwindow *window;
 
         GLuint VBO;
+        GLuint CBO;
         GLuint VAO;
         GLuint EBO;
 
