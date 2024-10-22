@@ -28,7 +28,7 @@ namespace lgl {
         int height;
         GLFWwindow *window;
 
-        GLuint VBO;
+        GLuint buffer;
         GLuint CBO;
         GLuint VAO;
         GLuint IBO;

@@ -14,7 +14,7 @@
 namespace lgl {
     Application::Application(const int width, const int height, const std::string &title)
         : title(title), width(width), height(height), window(),
-          VBO(0), CBO(0), VAO(0), IBO(0) {
+          buffer(0), CBO(0), VAO(0), IBO(0) {
         initWindow(width, height, title);
         initCallBacks();
 
@@ -22,20 +22,21 @@ namespace lgl {
         glGenVertexArrays(1, &VAO);
         glBindVertexArray(VAO);
 
-        glGenBuffers(1, &VBO);
-        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        glGenBuffers(1, &buffer);
+        glBindBuffer(GL_ARRAY_BUFFER, buffer);
         glBufferData(GL_ARRAY_BUFFER, sizeof(Data::CUBE), Data::CUBE, GL_STATIC_DRAW);
+
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Data::Vertex), (const void *) 0);
+
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Data::Vertex), (const void *) sizeof(Data::Point));
 
         glGenBuffers(1, &IBO);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Data::CUBE_INDICES), Data::CUBE_INDICES, GL_STATIC_DRAW);
 
-
-        glEnableVertexAttribArray(0);
-        glEnableVertexAttribArray(1);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Data::Vertex), (const void *) 0);
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Data::Vertex), (const void *) sizeof(Data::Point));
-
+        glBindVertexArray(0);
 
         // Draw empty triangles
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -70,7 +71,7 @@ namespace lgl {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             glUniform1f(glGetUniformLocation(program.get(), "iTime"), static_cast<float>(glfwGetTime()));
-
+            glBindVertexArray(VAO);
             glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr);
 
             auto currentTime = std::chrono::high_resolution_clock::now();
@@ -89,7 +90,7 @@ namespace lgl {
     void Application::initWindow(int width, int height, const std::string &header) {
         glfwInit();
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 
