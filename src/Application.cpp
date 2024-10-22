@@ -50,8 +50,8 @@ namespace lgl {
 #endif
 
         // Shaders
-        const auto fsPath = std::filesystem::path("../shaders/main.frag");
-        const auto vsPath = std::filesystem::path("../shaders/main.vert");
+        const auto fsPath = std::filesystem::path("../res/shaders/main.frag");
+        const auto vsPath = std::filesystem::path("../res/shaders/main.vert");
         program.load(vsPath, fsPath);
         glUseProgram(program.get());
     }
