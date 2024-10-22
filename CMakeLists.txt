@@ -10,7 +10,9 @@ add_executable(${PROJECT_NAME} src/main.cpp
         src/Program.cpp
         src/Data.h
         src/Debug.h
-        src/Mesh.h)
+        src/Mesh.h
+        src/VertexBuffer.h
+        src/IndexBuffer.h)
 
 # dependencies
 include(FetchContent)

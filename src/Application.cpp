@@ -13,18 +13,14 @@
 
 namespace lgl {
     Application::Application(const int width, const int height, const std::string &title)
-        : title(title), width(width), height(height), window(),
-          buffer(0), CBO(0), VAO(0), IBO(0) {
+        : title(title), width(width), height(height), window(), VAO(0) {
         initWindow(width, height, title);
         initCallBacks();
-
 
         glGenVertexArrays(1, &VAO);
         glBindVertexArray(VAO);
 
-        glGenBuffers(1, &buffer);
-        glBindBuffer(GL_ARRAY_BUFFER, buffer);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(Data::CUBE), Data::CUBE, GL_STATIC_DRAW);
+        vbo = new VertexBuffer(Data::CUBE, sizeof(Data::CUBE));
 
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Data::Vertex), (const void *) 0);
@@ -32,9 +28,7 @@ namespace lgl {
         glEnableVertexAttribArray(1);
         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Data::Vertex), (const void *) sizeof(Data::Point));
 
-        glGenBuffers(1, &IBO);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Data::CUBE_INDICES), Data::CUBE_INDICES, GL_STATIC_DRAW);
+        ibo = new IndexBuffer(Data::CUBE_INDICES, 36);
 
         glBindVertexArray(0);
 
@@ -57,6 +51,8 @@ namespace lgl {
     }
 
     Application::~Application() {
+        delete vbo;
+        delete ibo;
         glfwDestroyWindow(window);
         glfwTerminate();
     }

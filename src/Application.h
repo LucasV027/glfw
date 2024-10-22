@@ -3,8 +3,9 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include "Debug.h"
 #include "Program.h"
+#include "VertexBuffer.h"
+#include "IndexBuffer.h"
 
 namespace lgl {
     class Application {
@@ -28,10 +29,10 @@ namespace lgl {
         int height;
         GLFWwindow *window;
 
-        GLuint buffer;
-        GLuint CBO;
+        VertexBuffer *vbo;
+        IndexBuffer *ibo;
+
         GLuint VAO;
-        GLuint IBO;
 
         Program program;
     };
