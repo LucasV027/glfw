@@ -8,7 +8,8 @@ add_executable(${PROJECT_NAME} src/main.cpp
         src/Application.h
         src/Program.h
         src/Program.cpp
-        src/Data.h)
+        src/Data.h
+        src/Debug.h)
 
 # dependencies
 include(FetchContent)

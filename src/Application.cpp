@@ -1,83 +1,58 @@
 #include "Application.h"
 
 #include <iostream>
-#include <cstdlib>
 #include <format>
 
 #include "Program.h"
 
-#include <glm/glm.hpp>
 
 #include "Data.h"
+#include "Debug.h"
 #include "glm/gtc/type_ptr.hpp"
+
 
 namespace lgl {
     Application::Application(const int width, const int height, const std::string &title)
-        : title(title), width(width), height(height),
-          VBO(0), CBO(0), VAO(0), EBO(0) {
-        glfwSetErrorCallback([](const int error, const char *description) {
-            std::cerr << error << ": " << description << std::endl;
-        });
-
-        if (!glfwInit()) {
-            exit(EXIT_FAILURE);
-        }
-
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-        glfwWindowHint(GLFW_SAMPLES, 4);
-
-        window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
-        if (!window) {
-            glfwTerminate();
-            exit(EXIT_FAILURE);
-        }
-
-        glfwSetKeyCallback(window, [](GLFWwindow *window, int key, int, int action, int) {
-            if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-                glfwSetWindowShouldClose(window, GLFW_TRUE);
-        });
-
-        glfwMakeContextCurrent(window);
-        gladLoadGL();
-        glfwSwapInterval(1);
+        : title(title), width(width), height(height), window(),
+          VBO(0), CBO(0), VAO(0), IBO(0) {
+        initWindow(width, height, title);
+        initCallBacks();
 
 
-        // Vertex positions buffer
-        glGenBuffers(1, &VBO);
-        // Indices buffer
-        glGenBuffers(1, &EBO);
-        // Vao
         glGenVertexArrays(1, &VAO);
-
         glBindVertexArray(VAO);
+
+        glGenBuffers(1, &VBO);
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(Data::cubeVerticesWithColors), Data::cubeVerticesWithColors,
-                     GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(Data::CUBE), Data::CUBE, GL_STATIC_DRAW);
+
+        glGenBuffers(1, &IBO);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Data::CUBE_INDICES), Data::CUBE_INDICES, GL_STATIC_DRAW);
 
 
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Data::cubeIndices), Data::cubeIndices, GL_STATIC_DRAW);
-
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Data::Vertex), reinterpret_cast<const void *>(0));
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Data::Vertex),
-                              reinterpret_cast<const void *>(sizeof(Data::Point)));
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Data::Vertex), (const void *) 0);
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Data::Vertex), (const void *) sizeof(Data::Point));
 
 
         // Draw empty triangles
-        // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
         // Optimizations
+#define DRAW_ALL
+#ifndef DRAW_ALL
         glEnable(GL_CULL_FACE); // cull face
         glCullFace(GL_BACK); // cull back face
         glFrontFace(GL_CCW); // GL_CCW for counter clock-wise
+#endif
 
         // Shaders
         const auto fsPath = std::filesystem::path("../shaders/main.frag");
         const auto vsPath = std::filesystem::path("../shaders/main.vert");
         program.load(vsPath, fsPath);
+        glUseProgram(program.get());
     }
 
     Application::~Application() {
@@ -94,13 +69,9 @@ namespace lgl {
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
-            glUseProgram(program.get());
             glUniform1f(glGetUniformLocation(program.get(), "iTime"), static_cast<float>(glfwGetTime()));
 
-            glBindVertexArray(VAO);
             glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr);
-
 
             auto currentTime = std::chrono::high_resolution_clock::now();
             std::chrono::duration<double> elapsed = currentTime - lastReloadTime;
@@ -113,6 +84,48 @@ namespace lgl {
             glfwPollEvents();
             glfwSwapBuffers(window);
         }
+    }
+
+    void Application::initWindow(int width, int height, const std::string &header) {
+        glfwInit();
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
+
+        window = glfwCreateWindow(width, height, header.c_str(), nullptr, nullptr);
+        if (!window) {
+            glfwTerminate();
+            throw std::runtime_error("Failed to create GLFW window.");
+        }
+        glfwMakeContextCurrent(window);
+
+        if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
+            glfwTerminate();
+            throw std::runtime_error("Failed to initialize GLAD");
+        }
+
+        GLint flags;
+        glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
+        if (flags & GL_CONTEXT_FLAG_DEBUG_BIT) {
+            glEnable(GL_DEBUG_OUTPUT);
+            glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+            glDebugMessageCallback(debug::glDebugOutput, nullptr);
+            glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
+        }
+    }
+
+    void Application::initCallBacks() const {
+        //  glfwSetFramebufferSizeCallback(window, resizeCallback);
+
+        glfwSetErrorCallback([](const int error, const char *description) {
+            std::cerr << error << ": " << description << std::endl;
+        });
+
+        glfwSetKeyCallback(window, [](GLFWwindow *window, int key, int, int action, int) {
+            if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+                glfwSetWindowShouldClose(window, GLFW_TRUE);
+        });
     }
 
     void Application::updateFpsCounter() {

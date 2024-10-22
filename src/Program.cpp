@@ -55,8 +55,10 @@ namespace lgl {
         GLint success;
         glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
         if (!success) {
-            char infoLog[512];
-            glGetShaderInfoLog(shader, 512, nullptr, infoLog);
+            GLint infoLength;
+            glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLength);
+            char infoLog[infoLength];
+            glGetShaderInfoLog(shader, infoLength, nullptr, infoLog);
             throw std::runtime_error("Shader compilation failed for " + path.string() + " : " + std::string(infoLog));
         }
 
@@ -67,6 +69,7 @@ namespace lgl {
 
     void Program::link() const {
         glLinkProgram(shaderProgramme);
+        glValidateProgram(shaderProgramme);
 
         GLint success;
         glGetProgramiv(shaderProgramme, GL_LINK_STATUS, &success);
@@ -90,11 +93,11 @@ namespace lgl {
             throw std::runtime_error("Could not open file: " + filePath.string());
         }
 
-        std::streamsize fileSize = fileStream.tellg();
+        std::string buffer(fileStream.tellg(), '\0');
+
         fileStream.seekg(0, std::ios::beg);
 
-        std::string buffer(fileSize, '\0');
-        if (!fileStream.read(&buffer[0], fileSize)) {
+        if (!fileStream.read(&buffer[0], buffer.size())) {
             throw std::runtime_error("Error reading file: " + filePath.string());
         }
 
