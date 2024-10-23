@@ -6,6 +6,8 @@
 namespace lgl {
     class Renderer {
     public:
+        void Init() const;
+
         void Clear();
 
         void Draw(const VertexArray &vao, const IndexBuffer &ibo, const Program &program);

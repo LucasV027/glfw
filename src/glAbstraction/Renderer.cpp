@@ -1,6 +1,14 @@
 #include "Renderer.h"
 
 namespace lgl {
+    void Renderer::Init() const {
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+        glEnable(GL_CULL_FACE); // cull face
+        glCullFace(GL_BACK); // cull back face
+        glFrontFace(GL_CCW); // GL_CCW for counter clock-wise
+    }
+
     void Renderer::Clear() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }

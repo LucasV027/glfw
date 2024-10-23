@@ -14,6 +14,8 @@ namespace lgl {
         InitWindow(width, height, title);
         InitCallBacks();
 
+        renderer.Init();
+
         vao = new VertexArray();
 
         vbo = new VertexBuffer(Data::CUBE, sizeof(Data::CUBE));
@@ -26,33 +28,15 @@ namespace lgl {
 
         ibo = new IndexBuffer(Data::CUBE_INDICES, 36);
 
+        program.Create(vsPath, fsPath);
+        program.LocateVariable("iTime");
+
         vbo->Unbind();
         ibo->Unbind();
         vao->UnBind();
-
-
-        // Draw empty triangles
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-        // Optimizations
-        glEnable(GL_CULL_FACE); // cull face
-        glCullFace(GL_BACK); // cull back face
-        glFrontFace(GL_CCW); // GL_CCW for counter clock-wise
-
-        // Shaders
-        const auto fsPath = std::filesystem::path("../res/shaders/main.frag");
-        const auto vsPath = std::filesystem::path("../res/shaders/main.vert");
-        program.Create(vsPath, fsPath);
-        program.LocateVariable("iTime");
+        program.Unbind();
     }
 
-    Application::~Application() {
-        delete vbo;
-        delete ibo;
-        delete vao;
-        glfwDestroyWindow(window);
-        glfwTerminate();
-    }
 
     void Application::mainLoop() {
         while (!glfwWindowShouldClose(window)) {
@@ -81,7 +65,9 @@ namespace lgl {
             glfwTerminate();
             throw std::runtime_error("Failed to create GLFW window.");
         }
+
         glfwMakeContextCurrent(window);
+        glfwSwapInterval(1);
 
         if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
             glfwTerminate();
@@ -96,6 +82,14 @@ namespace lgl {
             glDebugMessageCallback(debug::glDebugOutput, nullptr);
             glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
         }
+    }
+
+    Application::~Application() {
+        delete vbo;
+        delete ibo;
+        delete vao;
+        glfwDestroyWindow(window);
+        glfwTerminate();
     }
 
     void Application::InitCallBacks() const {

@@ -31,13 +31,15 @@ namespace lgl {
         int height;
 
         GLFWwindow *window;
+
         VertexBuffer *vbo;
         IndexBuffer *ibo;
         VertexArray *vao;
-
+        Program program;
         Renderer renderer;
 
-        Program program;
+        const std::filesystem::path fsPath = "../res/shaders/main.frag";
+        const std::filesystem::path vsPath = "../res/shaders/main.vert";
     };
 }
 
