@@ -12,7 +12,11 @@ add_executable(${PROJECT_NAME} src/main.cpp
         src/Debug.h
         src/Mesh.h
         src/VertexBuffer.h
-        src/IndexBuffer.h)
+        src/IndexBuffer.h
+        src/VertexArray.h
+        src/VertexBufferLayout.h
+        src/VertexBufferLayout.cpp
+        src/VertexArray.cpp)
 
 # dependencies
 include(FetchContent)

@@ -8,29 +8,29 @@
 
 #include "Data.h"
 #include "Debug.h"
+#include "VertexArray.h"
 #include "glm/gtc/type_ptr.hpp"
 
 
 namespace lgl {
     Application::Application(const int width, const int height, const std::string &title)
-        : title(title), width(width), height(height), window(), VAO(0) {
+        : title(title), width(width), height(height), window(nullptr) {
         initWindow(width, height, title);
         initCallBacks();
 
-        glGenVertexArrays(1, &VAO);
-        glBindVertexArray(VAO);
-
+        vao = new VertexArray();
         vbo = new VertexBuffer(Data::CUBE, sizeof(Data::CUBE));
 
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Data::Vertex), (const void *) 0);
+        VertexBufferLayout vboLayout;
+        vboLayout.Push<float>(3);
+        vboLayout.Push<float>(3);
 
-        glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Data::Vertex), (const void *) sizeof(Data::Point));
+        vao->AddBuffer(*vbo, vboLayout);
 
         ibo = new IndexBuffer(Data::CUBE_INDICES, 36);
 
-        glBindVertexArray(0);
+        vao->UnBind();
+
 
         // Draw empty triangles
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -53,6 +53,7 @@ namespace lgl {
     Application::~Application() {
         delete vbo;
         delete ibo;
+        delete vao;
         glfwDestroyWindow(window);
         glfwTerminate();
     }
@@ -67,7 +68,7 @@ namespace lgl {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             glUniform1f(glGetUniformLocation(program.get(), "iTime"), static_cast<float>(glfwGetTime()));
-            glBindVertexArray(VAO);
+            vao->Bind();
             glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr);
 
             auto currentTime = std::chrono::high_resolution_clock::now();

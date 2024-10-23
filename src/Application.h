@@ -6,6 +6,7 @@
 #include "Program.h"
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
+#include "VertexArray.h"
 
 namespace lgl {
     class Application {
@@ -31,8 +32,7 @@ namespace lgl {
 
         VertexBuffer *vbo;
         IndexBuffer *ibo;
-
-        GLuint VAO;
+        VertexArray *vao;
 
         Program program;
     };
