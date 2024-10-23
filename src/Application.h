@@ -1,13 +1,13 @@
 #pragma once
 
-#include <glad/glad.h>
+#include <glad/glad.h> // Do not remove
 #include <GLFW/glfw3.h>
 
-#include "Program.h"
-#include "VertexBuffer.h"
-#include "IndexBuffer.h"
-#include "Renderer.h"
-#include "VertexArray.h"
+#include "glAbstraction/Program.h"
+#include "glAbstraction/VertexBuffer.h"
+#include "glAbstraction/IndexBuffer.h"
+#include "glAbstraction/Renderer.h"
+#include "glAbstraction/VertexArray.h"
 
 namespace lgl {
     class Application {

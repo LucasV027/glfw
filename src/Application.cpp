@@ -3,14 +3,10 @@
 #include <iostream>
 #include <format>
 
-#include "Program.h"
-
-
+#include "glAbstraction/Program.h"
+#include "glAbstraction/VertexArray.h"
 #include "Data.h"
 #include "Debug.h"
-#include "VertexArray.h"
-#include "glm/gtc/type_ptr.hpp"
-
 
 namespace lgl {
     Application::Application(const int width, const int height, const std::string &title)
