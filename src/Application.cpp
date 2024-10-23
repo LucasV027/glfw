@@ -19,11 +19,12 @@ namespace lgl {
         initCallBacks();
 
         vao = new VertexArray();
+
         vbo = new VertexBuffer(Data::CUBE, sizeof(Data::CUBE));
 
         VertexBufferLayout vboLayout;
-        vboLayout.Push<float>(3);
-        vboLayout.Push<float>(3);
+        vboLayout.Push<float>(3); // Positions
+        vboLayout.Push<float>(3); // Colors
 
         vao->AddBuffer(*vbo, vboLayout);
 
@@ -47,7 +48,6 @@ namespace lgl {
         const auto vsPath = std::filesystem::path("../res/shaders/main.vert");
         program.Create(vsPath, fsPath);
         program.LocateVariable("iTime");
-        program.Bind();
     }
 
     Application::~Application() {
@@ -62,12 +62,11 @@ namespace lgl {
         while (!glfwWindowShouldClose(window)) {
             updateFpsCounter();
 
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            renderer.Clear();
 
+            program.Bind();
             program.SetUniform1f("iTime", static_cast<float>(glfwGetTime()));
-            vao->Bind();
-            ibo->Bind();
-            glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr);
+            renderer.Draw(*vao, *ibo, program);
 
             glfwPollEvents();
             glfwSwapBuffers(window);

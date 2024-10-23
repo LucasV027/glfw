@@ -6,6 +6,7 @@
 #include "Program.h"
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
+#include "Renderer.h"
 #include "VertexArray.h"
 
 namespace lgl {
@@ -28,11 +29,13 @@ namespace lgl {
         std::string title;
         int width;
         int height;
-        GLFWwindow *window;
 
+        GLFWwindow *window;
         VertexBuffer *vbo;
         IndexBuffer *ibo;
         VertexArray *vao;
+
+        Renderer renderer;
 
         Program program;
     };
