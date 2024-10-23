@@ -14,9 +14,9 @@ namespace lgl {
     public:
         Application(int width, int height, const std::string &title);
 
-        ~Application();
-
         void mainLoop();
+
+        ~Application();
 
     private:
         void InitWindow(int width, int height, const std::string &header);

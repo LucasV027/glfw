@@ -5,8 +5,9 @@
 
 #include "glAbstraction/Program.h"
 #include "glAbstraction/VertexArray.h"
+#include "glAbstraction/Debug.h"
+
 #include "Data.h"
-#include "Debug.h"
 
 namespace lgl {
     Application::Application(const int width, const int height, const std::string &title)
@@ -17,7 +18,6 @@ namespace lgl {
         renderer.Init();
 
         vao = new VertexArray();
-
         vbo = new VertexBuffer(Data::CUBE, sizeof(Data::CUBE));
 
         VertexBufferLayout vboLayout;
@@ -30,11 +30,6 @@ namespace lgl {
 
         program.Create(vsPath, fsPath);
         program.LocateVariable("iTime");
-
-        vbo->Unbind();
-        ibo->Unbind();
-        vao->UnBind();
-        program.Unbind();
     }
 
 
@@ -46,6 +41,7 @@ namespace lgl {
 
             program.Bind();
             program.SetUniform1f("iTime", static_cast<float>(glfwGetTime()));
+
             renderer.Draw(*vao, *ibo, program);
 
             glfwPollEvents();
@@ -53,7 +49,7 @@ namespace lgl {
         }
     }
 
-    void Application::InitWindow(int width, int height, const std::string &header) {
+    void Application::InitWindow(const int width, const int height, const std::string &header) {
         glfwInit();
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
@@ -79,7 +75,7 @@ namespace lgl {
         if (flags & GL_CONTEXT_FLAG_DEBUG_BIT) {
             glEnable(GL_DEBUG_OUTPUT);
             glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-            glDebugMessageCallback(debug::glDebugOutput, nullptr);
+            glDebugMessageCallback(debug::PrintGlDebugOutput, nullptr);
             glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
         }
     }

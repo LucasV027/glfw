@@ -6,21 +6,21 @@ set(CMAKE_CXX_STANDARD 20)
 add_executable(${PROJECT_NAME} src/main.cpp
         src/Application.cpp
         src/Application.h
-        src/glAbstraction/Program.h
         src/glAbstraction/Program.cpp
-        src/Data.h
-        src/Debug.h
-        src/Mesh.h
+        src/glAbstraction/Program.h
+        src/glAbstraction/Debug.cpp
+        src/glAbstraction/Debug.h
+        src/glAbstraction/VertexBuffer.cpp
         src/glAbstraction/VertexBuffer.h
+        src/glAbstraction/IndexBuffer.cpp
         src/glAbstraction/IndexBuffer.h
-        src/glAbstraction/VertexArray.h
-        src/glAbstraction/VertexBufferLayout.h
-        src/glAbstraction/VertexBufferLayout.cpp
         src/glAbstraction/VertexArray.cpp
+        src/glAbstraction/VertexArray.h
+        src/glAbstraction/VertexBufferLayout.cpp
+        src/glAbstraction/VertexBufferLayout.h
         src/glAbstraction/Renderer.cpp
         src/glAbstraction/Renderer.h
-        src/glAbstraction/VertexBuffer.cpp
-        src/glAbstraction/IndexBuffer.cpp
+        src/Data.h
 )
 
 # dependencies
