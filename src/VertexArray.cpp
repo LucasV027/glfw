@@ -30,6 +30,8 @@ namespace lgl {
                                   reinterpret_cast<const void *>(offset));
             offset += count * typesize;
         }
+
+        vbo.Unbind();
     }
 
     void VertexArray::Bind() const {

@@ -1,50 +1,60 @@
 #include "Program.h"
 
 #include <iostream>
-#include <vector>
+#include <ranges>
 #include <stdexcept>
+#include <cassert>
 
 namespace lgl {
     Program::~Program() {
         glDeleteProgram(shaderProgramme);
     }
 
-    void Program::reload() {
-        try {
-            std::cout << "Reloading..." << std::endl;
-
-            Program newProgram;
-            newProgram.load(vsPath, fsPath);
-
-            glDeleteProgram(shaderProgramme);
-            shaderProgramme = newProgram.shaderProgramme;
-            glUseProgram(shaderProgramme);
-        } catch (std::runtime_error &error) {
-            std::cout << std::flush;
-            std::cerr << error.what() << std::endl;
-        }
-    }
-
-    void Program::load(const std::filesystem::path &vertexShader, const std::filesystem::path &fragmentShader) {
-        vsPath = vertexShader;
-        fsPath = fragmentShader;
-
-        init();
+    void Program::Create(const std::filesystem::path &vertexShader, const std::filesystem::path &fragmentShader) {
+        shaderProgramme = glCreateProgram();
 
         assert(vertexShader.extension() == ".vert");
         assert(fragmentShader.extension() == ".frag");
 
-        loadShader(vertexShader, GL_VERTEX_SHADER);
-        loadShader(fragmentShader, GL_FRAGMENT_SHADER);
+        const auto vs = CompileShader(vertexShader, GL_VERTEX_SHADER);
+        glAttachShader(shaderProgramme, vs);
+        glDeleteShader(vs);
 
-        link();
+        const auto fs = CompileShader(fragmentShader, GL_FRAGMENT_SHADER);
+        glAttachShader(shaderProgramme, fs);
+        glDeleteShader(fs);
+
+        Link();
     }
 
-    void Program::init() {
-        shaderProgramme = glCreateProgram();
+    void Program::LocateVariable(const std::string &name) {
+        if (locations.contains(name)) { return; }
+
+        unsigned int location = glGetUniformLocation(shaderProgramme, name.c_str());
+        if (location == -1) {
+            std::cout << "(LocateVariable) Could not find uniform " << name << std::endl;
+        } else {
+            locations.insert({name, location});
+        }
     }
 
-    void Program::loadShader(const std::filesystem::path &path, const GLenum shaderType) const {
+    void Program::SetUniform1f(const std::string &name, float value) {
+        if (locations.contains(name)) {
+            glUniform1f(locations[name], value);
+        } else {
+            std::cout << "(SetUniform1f) Could not find uniform " << name << std::endl;
+        }
+    }
+
+    void Program::Bind() const {
+        glUseProgram(shaderProgramme);
+    }
+
+    void Program::Unbind() const {
+        glUseProgram(0);
+    }
+
+    unsigned int Program::CompileShader(const std::filesystem::path &path, const GLenum shaderType) {
         const std::string shaderSource = readFile(path);
         const char *shaderSourcePtr = shaderSource.c_str();
 
@@ -63,11 +73,10 @@ namespace lgl {
         }
 
         std::cout << "Shader loaded and compiled successfully from: " << path << std::endl;
-        glAttachShader(shaderProgramme, shader);
-        glDeleteShader(shader);
+        return shader;
     }
 
-    void Program::link() const {
+    void Program::Link() const {
         glLinkProgram(shaderProgramme);
         glValidateProgram(shaderProgramme);
 
@@ -82,9 +91,6 @@ namespace lgl {
         std::cout << "Program linked successfully." << std::endl;
     }
 
-    [[nodiscard]] GLuint Program::get() const {
-        return shaderProgramme;
-    }
 
     std::string Program::readFile(const std::filesystem::path &filePath) {
         std::ifstream fileStream(filePath, std::ios::ate | std::ios::binary);

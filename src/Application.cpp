@@ -29,6 +29,8 @@ namespace lgl {
 
         ibo = new IndexBuffer(Data::CUBE_INDICES, 36);
 
+        vbo->Unbind();
+        ibo->Unbind();
         vao->UnBind();
 
 
@@ -36,18 +38,16 @@ namespace lgl {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
         // Optimizations
-#define DRAW_ALL
-#ifndef DRAW_ALL
         glEnable(GL_CULL_FACE); // cull face
         glCullFace(GL_BACK); // cull back face
         glFrontFace(GL_CCW); // GL_CCW for counter clock-wise
-#endif
 
         // Shaders
         const auto fsPath = std::filesystem::path("../res/shaders/main.frag");
         const auto vsPath = std::filesystem::path("../res/shaders/main.vert");
-        program.load(vsPath, fsPath);
-        glUseProgram(program.get());
+        program.Create(vsPath, fsPath);
+        program.LocateVariable("iTime");
+        program.Bind();
     }
 
     Application::~Application() {
@@ -59,25 +59,15 @@ namespace lgl {
     }
 
     void Application::mainLoop() {
-        auto lastReloadTime = std::chrono::high_resolution_clock::now();
-        double reloadCooldown = 1.0;
-
         while (!glfwWindowShouldClose(window)) {
             updateFpsCounter();
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            glUniform1f(glGetUniformLocation(program.get(), "iTime"), static_cast<float>(glfwGetTime()));
+            program.SetUniform1f("iTime", static_cast<float>(glfwGetTime()));
             vao->Bind();
+            ibo->Bind();
             glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr);
-
-            auto currentTime = std::chrono::high_resolution_clock::now();
-            std::chrono::duration<double> elapsed = currentTime - lastReloadTime;
-
-            if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS && elapsed.count() > reloadCooldown) {
-                program.reload();
-                lastReloadTime = std::chrono::high_resolution_clock::now();
-            }
 
             glfwPollEvents();
             glfwSwapBuffers(window);

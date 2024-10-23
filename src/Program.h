@@ -1,9 +1,8 @@
 #pragma once
 
-#include <cassert>
 #include <filesystem>
 #include <fstream>
-#include <iostream>
+#include <unordered_map>
 
 #include <glad/glad.h>
 
@@ -14,26 +13,26 @@ namespace lgl {
 
         ~Program();
 
-        void reload();
+        void Create(const std::filesystem::path &vertexShader, const std::filesystem::path &fragmentShader);
 
-        void load(const std::filesystem::path &vertexShader, const std::filesystem::path &fragmentShader);
+        void LocateVariable(const std::string &name);
 
-        [[nodiscard]] GLuint get() const;
+        void SetUniform1f(const std::string &name, float value);
+
+        void Bind() const;
+
+        void Unbind() const;
 
     private:
-        void init();
+        static unsigned int CompileShader(const std::filesystem::path &path, GLenum shaderType);
 
-        void loadShader(const std::filesystem::path &path, GLenum shaderType) const;
-
-        void link() const;
+        void Link() const;
 
         std::string static readFile(const std::filesystem::path &filePath);
 
     private:
         GLuint shaderProgramme = 0;
-
-        std::filesystem::path vsPath;
-        std::filesystem::path fsPath;
+        std::unordered_map<std::string, int> locations;
     };
 }
 
