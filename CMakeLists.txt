@@ -18,7 +18,9 @@ add_executable(${PROJECT_NAME} src/main.cpp
         src/VertexBufferLayout.cpp
         src/VertexArray.cpp
         src/Renderer.cpp
-        src/Renderer.h)
+        src/Renderer.h
+        src/VertexBuffer.cpp
+)
 
 # dependencies
 include(FetchContent)

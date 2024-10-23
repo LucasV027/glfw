@@ -19,11 +19,11 @@ namespace lgl {
         void mainLoop();
 
     private:
-        void initWindow(int width, int height, const std::string &header);
+        void InitWindow(int width, int height, const std::string &header);
 
-        void initCallBacks() const;
+        void InitCallBacks() const;
 
-        void updateFpsCounter();
+        void UpdateFpsCounter();
 
     private:
         std::string title;

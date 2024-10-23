@@ -15,8 +15,8 @@
 namespace lgl {
     Application::Application(const int width, const int height, const std::string &title)
         : title(title), width(width), height(height), window(nullptr) {
-        initWindow(width, height, title);
-        initCallBacks();
+        InitWindow(width, height, title);
+        InitCallBacks();
 
         vao = new VertexArray();
 
@@ -60,7 +60,7 @@ namespace lgl {
 
     void Application::mainLoop() {
         while (!glfwWindowShouldClose(window)) {
-            updateFpsCounter();
+            UpdateFpsCounter();
 
             renderer.Clear();
 
@@ -73,7 +73,7 @@ namespace lgl {
         }
     }
 
-    void Application::initWindow(int width, int height, const std::string &header) {
+    void Application::InitWindow(int width, int height, const std::string &header) {
         glfwInit();
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
@@ -102,7 +102,7 @@ namespace lgl {
         }
     }
 
-    void Application::initCallBacks() const {
+    void Application::InitCallBacks() const {
         //  glfwSetFramebufferSizeCallback(window, resizeCallback);
 
         glfwSetErrorCallback([](const int error, const char *description) {
@@ -115,7 +115,7 @@ namespace lgl {
         });
     }
 
-    void Application::updateFpsCounter() {
+    void Application::UpdateFpsCounter() {
         static double previousSeconds = glfwGetTime();
         static int frameCount;
         const double currentSeconds = glfwGetTime();

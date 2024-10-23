@@ -7,23 +7,13 @@
 namespace lgl {
     class VertexBuffer {
     public:
-        VertexBuffer(const void *data, const int size) : id(0) {
-            glGenBuffers(1, &id);
-            glBindBuffer(GL_ARRAY_BUFFER, id);
-            glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
-        }
+        VertexBuffer(const void *data, int size);
 
-        ~VertexBuffer() {
-            glDeleteBuffers(1, &id);
-        }
+        ~VertexBuffer();
 
-        void Bind() const {
-            glBindBuffer(GL_ARRAY_BUFFER, id);
-        }
+        void Bind() const;
 
-        void Unbind() const {
-            glBindBuffer(GL_ARRAY_BUFFER, 0);
-        }
+        void Unbind() const;
 
     private:
         GLuint id;
