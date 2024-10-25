@@ -6,12 +6,16 @@
 #include "glAbstraction/Program.h"
 #include "glAbstraction/VertexArray.h"
 #include "glAbstraction/Debug.h"
-
 #include "Data.h"
+
+
+#include "glm/glm.hpp"
+#include "glm/ext/matrix_clip_space.hpp"
 
 namespace lgl {
     Application::Application(const int width, const int height, const std::string &title)
-        : title(title), width(width), height(height), window(nullptr) {
+        : title(title), width(width), height(height),
+          aspectRatio(static_cast<float>(width) / static_cast<float>(height)), window(nullptr) {
         InitWindow(width, height, title);
         InitCallBacks();
 
@@ -30,6 +34,12 @@ namespace lgl {
 
         program.Create(vsPath, fsPath);
         program.LocateVariable("iTime");
+        program.LocateVariable("mvp");
+
+        const float px = 2.f;
+        const float py = px / aspectRatio;
+        const glm::mat4 proj = glm::ortho(-px, px, -py, py, -2.0f, 2.0f);
+        program.SetUniformMat4f("mvp", proj);
     }
 
 
@@ -43,6 +53,8 @@ namespace lgl {
             program.SetUniform1f("iTime", static_cast<float>(glfwGetTime()));
 
             renderer.Draw(*vao, *ibo, program);
+
+            HandleResize();
 
             glfwPollEvents();
             glfwSwapBuffers(window);
@@ -89,8 +101,6 @@ namespace lgl {
     }
 
     void Application::InitCallBacks() const {
-        //  glfwSetFramebufferSizeCallback(window, resizeCallback);
-
         glfwSetErrorCallback([](const int error, const char *description) {
             std::cerr << error << ": " << description << std::endl;
         });
@@ -99,6 +109,22 @@ namespace lgl {
             if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
                 glfwSetWindowShouldClose(window, GLFW_TRUE);
         });
+    }
+
+    void Application::HandleResize() {
+        int newWidth, newHeight;
+        glfwGetWindowSize(window, &newWidth, &newHeight);
+        if (newWidth != width || newHeight != height) {
+            glViewport(0, 0, newWidth, newHeight);
+
+            width = newHeight;
+            height = newHeight;
+            aspectRatio = static_cast<float>(width) / static_cast<float>(height);
+            constexpr float px = 2.f;
+            const float py = px / aspectRatio;
+            const glm::mat4 proj = glm::ortho(-px, px, -py, py, -2.0f, 2.0f);
+            program.SetUniformMat4f("mvp", proj);
+        }
     }
 
     void Application::UpdateFpsCounter() {

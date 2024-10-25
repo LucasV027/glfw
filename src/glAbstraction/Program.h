@@ -6,6 +6,8 @@
 
 #include <glad/glad.h>
 
+#include "glm/fwd.hpp"
+
 namespace lgl {
     class Program {
     public:
@@ -18,6 +20,8 @@ namespace lgl {
         void LocateVariable(const std::string &name);
 
         void SetUniform1f(const std::string &name, float value);
+
+        void SetUniformMat4f(const std::string &name, const glm::mat4 &matrix);
 
         void Bind() const;
 

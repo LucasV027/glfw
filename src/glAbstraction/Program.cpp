@@ -5,6 +5,9 @@
 #include <stdexcept>
 #include <cassert>
 
+#include "glm/glm.hpp"
+#include "glm/gtc/type_ptr.inl"
+
 namespace lgl {
     Program::~Program() {
         glDeleteProgram(shaderProgramme);
@@ -25,12 +28,14 @@ namespace lgl {
         glDeleteShader(fs);
 
         Link();
+
+        Bind();
     }
 
     void Program::LocateVariable(const std::string &name) {
         if (locations.contains(name)) { return; }
 
-        unsigned int location = glGetUniformLocation(shaderProgramme, name.c_str());
+        int location = glGetUniformLocation(shaderProgramme, name.c_str());
         if (location == -1) {
             std::cout << "(LocateVariable) Could not find uniform " << name << std::endl;
         } else {
@@ -41,6 +46,14 @@ namespace lgl {
     void Program::SetUniform1f(const std::string &name, float value) {
         if (locations.contains(name)) {
             glUniform1f(locations[name], value);
+        } else {
+            std::cout << "(SetUniform1f) Could not find uniform " << name << std::endl;
+        }
+    }
+
+    void Program::SetUniformMat4f(const std::string &name, const glm::mat4 &matrix) {
+        if (locations.contains(name)) {
+            glUniformMatrix4fv(locations[name], 1, GL_FALSE, &matrix[0][0]);
         } else {
             std::cout << "(SetUniform1f) Could not find uniform " << name << std::endl;
         }

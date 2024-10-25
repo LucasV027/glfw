@@ -23,12 +23,15 @@ namespace lgl {
 
         void InitCallBacks() const;
 
+        void HandleResize();
+
         void UpdateFpsCounter();
 
     private:
         std::string title;
         int width;
         int height;
+        float aspectRatio;
 
         GLFWwindow *window;
 
