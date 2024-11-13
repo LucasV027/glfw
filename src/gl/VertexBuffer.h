@@ -4,7 +4,7 @@
 
 #include "GL/gl.h"
 
-namespace lgl {
+namespace GL {
     class VertexBuffer {
     public:
         VertexBuffer(const void *data, int size);

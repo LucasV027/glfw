@@ -1,6 +1,6 @@
 #include "Renderer.h"
 
-namespace lgl {
+namespace GL {
     void Renderer::Init() const {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 

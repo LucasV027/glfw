@@ -2,7 +2,7 @@
 
 #include <vector>
 
-namespace lgl {
+namespace GL {
     struct VertexBufferElement {
         unsigned int type;
         unsigned int count;

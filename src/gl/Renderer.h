@@ -3,7 +3,7 @@
 #include "Program.h"
 #include "VertexArray.h"
 
-namespace lgl {
+namespace GL {
     class Renderer {
     public:
         void Init() const;

@@ -2,7 +2,7 @@
 
 #include <glad/glad.h>
 
-namespace lgl::debug {
+namespace GL::Debug {
     void APIENTRY PrintGlDebugOutput(GLenum source,
                                      GLenum type,
                                      unsigned int id,

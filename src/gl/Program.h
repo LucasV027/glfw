@@ -8,7 +8,7 @@
 
 #include "glm/fwd.hpp"
 
-namespace lgl {
+namespace GL {
     class Program {
     public:
         Program() = default;

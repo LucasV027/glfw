@@ -2,7 +2,7 @@
 
 #include <glad/glad.h>
 
-namespace lgl {
+namespace GL {
     template<>
     void VertexBufferLayout::Push<float>(unsigned int count) {
         elements.emplace_back(GL_FLOAT, count, GL_FALSE, sizeof(float));

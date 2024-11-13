@@ -8,7 +8,7 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/type_ptr.inl"
 
-namespace lgl {
+namespace GL {
     Program::~Program() {
         glDeleteProgram(shaderProgramme);
     }

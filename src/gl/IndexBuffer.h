@@ -4,7 +4,7 @@
 
 #include "GL/gl.h"
 
-namespace lgl {
+namespace GL {
     class IndexBuffer {
     public:
         IndexBuffer(const unsigned int *data, unsigned int count);

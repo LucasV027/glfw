@@ -3,7 +3,7 @@
 #include "VertexBuffer.h"
 #include "VertexBufferLayout.h"
 
-namespace lgl {
+namespace GL {
     class VertexArray {
     public:
         VertexArray();

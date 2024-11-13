@@ -3,13 +3,13 @@
 #include <glad/glad.h> // Do not remove
 #include <GLFW/glfw3.h>
 
-#include "glAbstraction/Program.h"
-#include "glAbstraction/VertexBuffer.h"
-#include "glAbstraction/IndexBuffer.h"
-#include "glAbstraction/Renderer.h"
-#include "glAbstraction/VertexArray.h"
+#include "Program.h"
+#include "VertexBuffer.h"
+#include "IndexBuffer.h"
+#include "Renderer.h"
+#include "VertexArray.h"
 
-namespace lgl {
+namespace GL {
     class Application {
     public:
         Application(int width, int height, const std::string &title);

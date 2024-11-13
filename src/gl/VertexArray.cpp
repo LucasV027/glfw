@@ -2,7 +2,7 @@
 
 #include <ranges>
 
-namespace lgl {
+namespace GL {
     VertexArray::VertexArray() : vao() {
         glGenVertexArrays(1, &vao);
         glBindVertexArray(vao);

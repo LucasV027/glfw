@@ -3,16 +3,16 @@
 #include <iostream>
 #include <format>
 
-#include "glAbstraction/Program.h"
-#include "glAbstraction/VertexArray.h"
-#include "glAbstraction/Debug.h"
+#include "Program.h"
+#include "VertexArray.h"
+#include "Debug.h"
 #include "Data.h"
 
 
 #include "glm/glm.hpp"
 #include "glm/ext/matrix_clip_space.hpp"
 
-namespace lgl {
+namespace GL {
     Application::Application(const int width, const int height, const std::string &title)
         : title(title), width(width), height(height),
           aspectRatio(static_cast<float>(width) / static_cast<float>(height)), window(nullptr) {
@@ -87,7 +87,7 @@ namespace lgl {
         if (flags & GL_CONTEXT_FLAG_DEBUG_BIT) {
             glEnable(GL_DEBUG_OUTPUT);
             glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-            glDebugMessageCallback(debug::PrintGlDebugOutput, nullptr);
+            glDebugMessageCallback(Debug::PrintGlDebugOutput, nullptr);
             glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
         }
     }

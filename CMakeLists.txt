@@ -6,28 +6,28 @@ set(CMAKE_CXX_STANDARD 20)
 add_executable(${PROJECT_NAME} src/main.cpp
         src/Application.cpp
         src/Application.h
-        src/glAbstraction/Program.cpp
-        src/glAbstraction/Program.h
-        src/glAbstraction/Debug.cpp
-        src/glAbstraction/Debug.h
-        src/glAbstraction/VertexBuffer.cpp
-        src/glAbstraction/VertexBuffer.h
-        src/glAbstraction/IndexBuffer.cpp
-        src/glAbstraction/IndexBuffer.h
-        src/glAbstraction/VertexArray.cpp
-        src/glAbstraction/VertexArray.h
-        src/glAbstraction/VertexBufferLayout.cpp
-        src/glAbstraction/VertexBufferLayout.h
-        src/glAbstraction/Renderer.cpp
-        src/glAbstraction/Renderer.h
+        src/gl/Program.cpp
+        src/gl/Program.h
+        src/gl/Debug.cpp
+        src/gl/Debug.h
+        src/gl/VertexBuffer.cpp
+        src/gl/VertexBuffer.h
+        src/gl/IndexBuffer.cpp
+        src/gl/IndexBuffer.h
+        src/gl/VertexArray.cpp
+        src/gl/VertexArray.h
+        src/gl/VertexBufferLayout.cpp
+        src/gl/VertexBufferLayout.h
+        src/gl/Renderer.cpp
+        src/gl/Renderer.h
         src/Data.h
         src/extern/stb_image.h
-        src/glAbstraction/Texture.h
-        src/glAbstraction/Texture.cpp
+        src/gl/Texture.h
+        src/gl/Texture.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE src/extern)
-target_include_directories(${PROJECT_NAME} PRIVATE src/glAbstraction)
+target_include_directories(${PROJECT_NAME} PRIVATE src/gl)
 
 
 # dependencies
