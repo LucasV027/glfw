@@ -22,6 +22,7 @@ add_executable(${PROJECT_NAME} src/main.cpp
         src/gl/Renderer.h
         src/Data.h
         src/extern/stb_image.h
+        src/extern/stb_image.cpp
         src/gl/Texture.h
         src/gl/Texture.cpp
 )
