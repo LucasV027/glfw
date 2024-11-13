@@ -26,8 +26,6 @@ namespace GL {
 
         void HandleResize();
 
-        void UpdateFpsCounter();
-
     private:
         std::string title;
         int width;

@@ -54,17 +54,24 @@ namespace GL {
 
 
     void Application::mainLoop() {
+        float f = 0.0f;
         while (!glfwWindowShouldClose(window)) {
-            UpdateFpsCounter();
-
             renderer.Clear();
 
-            program.Bind();
+            ImGui_ImplOpenGL3_NewFrame();
+            ImGui_ImplGlfw_NewFrame();
+            ImGui::NewFrame(); {
+                ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
+                ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
+            }
 
+            program.Bind();
             renderer.Draw(*vao, *ibo, program);
 
             HandleResize();
 
+            ImGui::Render();
+            ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
             glfwSwapBuffers(window);
             glfwPollEvents();
@@ -149,19 +156,5 @@ namespace GL {
             const glm::mat4 proj = glm::ortho(-px, px, -py, py, -2.0f, 2.0f);
             program.SetUniformMat4f("mvp", proj);
         }
-    }
-
-    void Application::UpdateFpsCounter() {
-        static double previousSeconds = glfwGetTime();
-        static int frameCount;
-        const double currentSeconds = glfwGetTime();
-        double elapsedSeconds = currentSeconds - previousSeconds;
-        if (elapsedSeconds > 0.25) {
-            previousSeconds = currentSeconds;
-            double fps = static_cast<double>(frameCount) / elapsedSeconds;
-            glfwSetWindowTitle(window, std::format("{} @ fps: {:.1f}", title, fps).c_str());
-            frameCount = 0;
-        }
-        frameCount++;
     }
 }
