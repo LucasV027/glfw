@@ -9,7 +9,7 @@ namespace GL {
     public:
         void Init() const;
 
-        void Clear(Data::Color color = Data::BLACK);
+        void Clear(Color color = Colors::BLACK);
 
         void Draw(const VertexArray &vao, const IndexBuffer &ibo, const Program &program);
     };

@@ -4,14 +4,13 @@
 #define DATA_DIR "."
 #endif
 
+#include "Color.h"
+
 namespace GL::Data {
     struct Point {
         float x, y, z;
     };
 
-    using Color = Point;
-
-    constexpr auto BLACK = Color(0, 0, 0);
 
     struct VertexColor {
         Point position;
