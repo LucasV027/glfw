@@ -3,74 +3,34 @@
 #include <iostream>
 #include <format>
 
-#include "Program.h"
-#include "VertexArray.h"
-#include "Debug.h"
-#include "Data.h"
-
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 
 #include "glm/glm.hpp"
-#include "glm/gtc/matrix_transform.hpp"
+
+#include "Debug.h"
+#include "BasicScene.h"
 
 namespace GL {
     Application::Application(const int width, const int height, const std::string &title)
         : title(title), width(width), height(height),
           aspectRatio(static_cast<float>(width) / static_cast<float>(height)), window(nullptr) {
-        // Init
         InitWindow(width, height, title);
         InitCallBacks();
-        renderer.Init();
-
-        // VAO VBO & IBO
-        vao = new VertexArray();
-        vbo = new VertexBuffer(Data::SQUARE_UV, sizeof(Data::SQUARE_UV));
-
-        VertexBufferLayout vboLayout;
-        vboLayout.Push<float>(3); // Positions
-        vboLayout.Push<float>(2); // uv coords
-        vao->AddBuffer(*vbo, vboLayout);
-
-        ibo = new IndexBuffer(Data::SQUARE_UV_INDICES, 6);
-
-        // Program
-        program.Create(vsPath, fsPath);
-        program.LocateVariable("mvp");
-        program.LocateVariable("u_Texture");
-
-        // MVP
-        proj = glm::ortho(0.0f, (float) width, 0.0f, (float) height, -1.0f, 1.0f);
-        view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
-        model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
-
-        // Texture
-        constexpr int slot = 0;
-        texture = new Texture(std::filesystem::path(DATA_DIR "/textures/star.png"));
-        texture->Bind(slot);
-        program.SetUniform1i("u_Texture", slot);
+        scene = new BasicScene();
     }
 
 
     void Application::mainLoop() {
-        glm::vec3 translation(0, 0, 0);
-
         while (!glfwWindowShouldClose(window)) {
-            renderer.Clear();
-
             ImGui_ImplOpenGL3_NewFrame();
             ImGui_ImplGlfw_NewFrame();
-            ImGui::NewFrame(); {
-                ImGui::SliderFloat("Translate X", &translation.x, -400.0f, 400.0f);
-                ImGui::SliderFloat("Translate Y", &translation.y, -300.0f, 300.0f);
-                ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
-            }
+            ImGui::NewFrame();
+            scene->OnImGuiRender();
 
-            model = glm::translate(glm::mat4(1.0f), translation);
-            program.Bind();
-            program.SetUniformMat4f("mvp", proj * view * model);
-            renderer.Draw(*vao, *ibo, program);
+            scene->OnUpdate(0.0f);
+            scene->OnRender();
 
             HandleResize();
 
@@ -122,11 +82,6 @@ namespace GL {
     }
 
     Application::~Application() {
-        delete vbo;
-        delete ibo;
-        delete vao;
-        delete texture;
-
         ImGui_ImplOpenGL3_Shutdown();
         ImGui_ImplGlfw_Shutdown();
         ImGui::DestroyContext();
@@ -155,10 +110,6 @@ namespace GL {
             width = newHeight;
             height = newHeight;
             aspectRatio = static_cast<float>(width) / static_cast<float>(height);
-            constexpr float px = 2.f;
-            const float py = px / aspectRatio;
-            const glm::mat4 proj = glm::ortho(-px, px, -py, py, -2.0f, 2.0f);
-            program.SetUniformMat4f("mvp", proj);
         }
     }
 }

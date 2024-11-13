@@ -26,10 +26,12 @@ add_executable(${PROJECT_NAME} src/main.cpp
         src/extern/stb_image.cpp
         src/gl/Texture.h
         src/gl/Texture.cpp
+        src/scene/Scene.h
+        src/scene/BasicScene.h
+        src/scene/BasicScene.cpp
 )
 
-target_include_directories(${PROJECT_NAME} PRIVATE src/extern)
-target_include_directories(${PROJECT_NAME} PRIVATE src/gl)
+target_include_directories(${PROJECT_NAME} PRIVATE src/extern src/gl src/scene)
 target_compile_definitions(${PROJECT_NAME} PRIVATE DATA_DIR=${DATA_DIR})
 
 include(cmake/dependencies.cmake)

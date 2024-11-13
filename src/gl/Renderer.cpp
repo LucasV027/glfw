@@ -9,7 +9,8 @@ namespace GL {
         glFrontFace(GL_CCW); // GL_CCW for counter clock-wise
     }
 
-    void Renderer::Clear() {
+    void Renderer::Clear(Data::Color color) {
+        glClearColor(color.x, color.y, color.z, 1.0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 

@@ -11,6 +11,8 @@ namespace GL::Data {
 
     using Color = Point;
 
+    constexpr auto BLACK = Color(0, 0, 0);
+
     struct VertexColor {
         Point position;
         Color color;
