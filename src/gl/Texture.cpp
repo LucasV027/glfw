@@ -1,11 +1,12 @@
 #include "Texture.h"
 
+#include <iostream>
 #include <utility>
 #include <glad/glad.h>
 
 #include "stb_image.h"
 
-Texture::Texture(std::filesystem::path filepath) : filepath(std::move(filepath)),
+Texture::Texture(const std::filesystem::path& filepath) : filepath(filepath),
                                                    buffer(nullptr), width(0), height(0),
                                                    bpp(0), id(0) {
     stbi_set_flip_vertically_on_load(1);
@@ -16,13 +17,18 @@ Texture::Texture(std::filesystem::path filepath) : filepath(std::move(filepath))
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA8, GL_UNSIGNED_BYTE, buffer);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
     glBindTexture(GL_TEXTURE_2D, 0);
 
-    if (buffer) stbi_image_free(buffer);
+    if (buffer) {
+        std::cout << "Texture loaded successfully from: " << filepath.string() << std::endl;
+        stbi_image_free(buffer);
+    } else {
+        std::cerr << "Failed to load texture from: " << filepath.string() << std::endl;
+    }
 }
 
 Texture::~Texture() {
@@ -31,7 +37,7 @@ Texture::~Texture() {
 
 void Texture::Bind(const unsigned int slot) {
     glActiveTexture(GL_TEXTURE0 + slot);
-    glBindTexture(GL_TEXTURE_2D, slot);
+    glBindTexture(GL_TEXTURE_2D, id);
 }
 
 void Texture::Unbind() {

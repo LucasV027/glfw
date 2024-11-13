@@ -6,7 +6,7 @@
 
 class Texture {
 public:
-    explicit Texture(std::filesystem::path filepath);
+    explicit Texture(const std::filesystem::path &filepath);
 
     ~Texture();
 
