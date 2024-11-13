@@ -21,7 +21,7 @@ add_executable(${PROJECT_NAME} src/main.cpp
         src/glAbstraction/Renderer.cpp
         src/glAbstraction/Renderer.h
         src/Data.h
-        src/extern/stb_image_write.h
+        src/extern/stb_image.h
 )
 
 # dependencies
