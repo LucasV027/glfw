@@ -8,6 +8,9 @@
 #include "Debug.h"
 #include "Data.h"
 
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
 
 #include "glm/glm.hpp"
 #include "glm/ext/matrix_clip_space.hpp"
@@ -62,8 +65,9 @@ namespace GL {
 
             HandleResize();
 
-            glfwPollEvents();
+
             glfwSwapBuffers(window);
+            glfwPollEvents();
         }
     }
 
@@ -98,6 +102,12 @@ namespace GL {
         }
 
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        IMGUI_CHECKVERSION();
+        ImGui::CreateContext();
+        ImGui_ImplGlfw_InitForOpenGL(window, true);
+        ImGui_ImplOpenGL3_Init("#version 450 core");
+        ImGui::StyleColorsClassic();
     }
 
     Application::~Application() {
@@ -105,6 +115,11 @@ namespace GL {
         delete ibo;
         delete vao;
         delete texture;
+
+        ImGui_ImplOpenGL3_Shutdown();
+        ImGui_ImplGlfw_Shutdown();
+        ImGui::DestroyContext();
+
         glfwDestroyWindow(window);
         glfwTerminate();
     }
