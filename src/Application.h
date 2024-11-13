@@ -2,6 +2,7 @@
 
 #include <glad/glad.h> // Do not remove
 #include <GLFW/glfw3.h>
+#include "glm/glm.hpp"
 
 #include "Program.h"
 #include "VertexBuffer.h"
@@ -38,6 +39,8 @@ namespace GL {
         IndexBuffer *ibo;
         VertexArray *vao;
         Texture *texture;
+
+        glm::mat4 proj, view, model;
 
         Program program;
         Renderer renderer;

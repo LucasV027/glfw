@@ -13,15 +13,15 @@
 #include "imgui_impl_opengl3.h"
 
 #include "glm/glm.hpp"
-#include "glm/ext/matrix_clip_space.hpp"
+#include "glm/gtc/matrix_transform.hpp"
 
 namespace GL {
     Application::Application(const int width, const int height, const std::string &title)
         : title(title), width(width), height(height),
           aspectRatio(static_cast<float>(width) / static_cast<float>(height)), window(nullptr) {
+        // Init
         InitWindow(width, height, title);
         InitCallBacks();
-
         renderer.Init();
 
         // VAO VBO & IBO
@@ -40,10 +40,10 @@ namespace GL {
         program.LocateVariable("mvp");
         program.LocateVariable("u_Texture");
 
-        const float px = 2.f;
-        const float py = px / aspectRatio;
-        const glm::mat4 proj = glm::ortho(-px, px, -py, py, -2.0f, 2.0f);
-        program.SetUniformMat4f("mvp", proj);
+        // MVP
+        proj = glm::ortho(0.0f, (float) width, 0.0f, (float) height, -1.0f, 1.0f);
+        view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+        model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 
         // Texture
         constexpr int slot = 0;
@@ -54,18 +54,22 @@ namespace GL {
 
 
     void Application::mainLoop() {
-        float f = 0.0f;
+        glm::vec3 translation(0, 0, 0);
+
         while (!glfwWindowShouldClose(window)) {
             renderer.Clear();
 
             ImGui_ImplOpenGL3_NewFrame();
             ImGui_ImplGlfw_NewFrame();
             ImGui::NewFrame(); {
-                ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
+                ImGui::SliderFloat("Translate X", &translation.x, -400.0f, 400.0f);
+                ImGui::SliderFloat("Translate Y", &translation.y, -300.0f, 300.0f);
                 ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
             }
 
+            model = glm::translate(glm::mat4(1.0f), translation);
             program.Bind();
+            program.SetUniformMat4f("mvp", proj * view * model);
             renderer.Draw(*vao, *ibo, program);
 
             HandleResize();
