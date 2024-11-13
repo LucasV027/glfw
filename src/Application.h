@@ -7,6 +7,7 @@
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
 #include "Renderer.h"
+#include "Texture.h"
 #include "VertexArray.h"
 
 namespace GL {
@@ -38,6 +39,8 @@ namespace GL {
         VertexBuffer *vbo;
         IndexBuffer *ibo;
         VertexArray *vao;
+        Texture *texture;
+
         Program program;
         Renderer renderer;
 

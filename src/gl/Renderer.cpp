@@ -2,7 +2,7 @@
 
 namespace GL {
     void Renderer::Init() const {
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
         glEnable(GL_CULL_FACE); // cull face
         glCullFace(GL_BACK); // cull back face

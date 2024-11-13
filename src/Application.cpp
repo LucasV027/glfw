@@ -21,25 +21,32 @@ namespace GL {
 
         renderer.Init();
 
+        // VAO VBO & IBO
         vao = new VertexArray();
-        vbo = new VertexBuffer(Data::CUBE, sizeof(Data::CUBE));
+        vbo = new VertexBuffer(Data::SQUARE_UV, sizeof(Data::SQUARE_UV));
 
         VertexBufferLayout vboLayout;
         vboLayout.Push<float>(3); // Positions
-        vboLayout.Push<float>(3); // Colors
-
+        vboLayout.Push<float>(2); // uv coords
         vao->AddBuffer(*vbo, vboLayout);
 
-        ibo = new IndexBuffer(Data::CUBE_INDICES, 36);
+        ibo = new IndexBuffer(Data::SQUARE_UV_INDICES, 6);
 
+        // Program
         program.Create(vsPath, fsPath);
-        program.LocateVariable("iTime");
         program.LocateVariable("mvp");
+        program.LocateVariable("u_Texture");
 
         const float px = 2.f;
         const float py = px / aspectRatio;
         const glm::mat4 proj = glm::ortho(-px, px, -py, py, -2.0f, 2.0f);
         program.SetUniformMat4f("mvp", proj);
+
+        // Texture
+        constexpr int slot = 0;
+        texture = new Texture(std::filesystem::path(DATA_DIR "/textures/star.png"));
+        texture->Bind(slot);
+        program.SetUniform1i("u_Texture", slot);
     }
 
 
@@ -50,7 +57,6 @@ namespace GL {
             renderer.Clear();
 
             program.Bind();
-            program.SetUniform1f("iTime", static_cast<float>(glfwGetTime()));
 
             renderer.Draw(*vao, *ibo, program);
 
@@ -90,12 +96,15 @@ namespace GL {
             glDebugMessageCallback(Debug::PrintGlDebugOutput, nullptr);
             glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
         }
+
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 
     Application::~Application() {
         delete vbo;
         delete ibo;
         delete vao;
+        delete texture;
         glfwDestroyWindow(window);
         glfwTerminate();
     }
