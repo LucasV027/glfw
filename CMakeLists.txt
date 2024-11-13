@@ -22,7 +22,13 @@ add_executable(${PROJECT_NAME} src/main.cpp
         src/glAbstraction/Renderer.h
         src/Data.h
         src/extern/stb_image.h
+        src/glAbstraction/Texture.h
+        src/glAbstraction/Texture.cpp
 )
+
+target_include_directories(${PROJECT_NAME} PRIVATE src/extern)
+target_include_directories(${PROJECT_NAME} PRIVATE src/glAbstraction)
+
 
 # dependencies
 include(FetchContent)
