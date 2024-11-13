@@ -19,6 +19,8 @@ namespace GL {
 
         void LocateVariable(const std::string &name);
 
+        void SetUniform1i(const std::string &name, int value);
+
         void SetUniform1f(const std::string &name, float value);
 
         void SetUniformMat4f(const std::string &name, const glm::mat4 &matrix);

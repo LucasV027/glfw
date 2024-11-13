@@ -41,8 +41,8 @@ namespace GL {
         Program program;
         Renderer renderer;
 
-        const std::filesystem::path fsPath = "../res/shaders/main.frag";
-        const std::filesystem::path vsPath = "../res/shaders/main.vert";
+        const std::filesystem::path fsPath = DATA_DIR "/shaders/main.frag";
+        const std::filesystem::path vsPath = DATA_DIR "/shaders/main.vert";
     };
 }
 

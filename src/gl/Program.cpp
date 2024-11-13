@@ -43,6 +43,14 @@ namespace GL {
         }
     }
 
+    void Program::SetUniform1i(const std::string &name, int value) {
+        if (locations.contains(name)) {
+            glUniform1i(locations[name], value);
+        } else {
+            std::cout << "(SetUniform1i) Could not find uniform " << name << std::endl;
+        }
+    }
+
     void Program::SetUniform1f(const std::string &name, float value) {
         if (locations.contains(name)) {
             glUniform1f(locations[name], value);

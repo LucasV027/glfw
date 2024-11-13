@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef DATA_DIR
+#define DATA_DIR "."
+#endif
 
 namespace GL::Data {
     struct Point {
@@ -14,14 +17,14 @@ namespace GL::Data {
     };
 
     static constexpr Vertex CUBE[] = {
-        {{ 0.5f, -0.5f, -0.5f}, {1.f, 0.f, 0.f}},  // Red
-        {{ 0.5f, -0.5f,  0.5f}, {0.f, 1.f, 0.f}},  // Green
-        {{-0.5f, -0.5f,  0.5f}, {0.f, 0.f, 1.f}},  // Blue
-        {{-0.5f, -0.5f, -0.5f}, {1.f, 1.f, 0.f}},  // Yellow
-        {{ 0.5f,  0.5f, -0.5f}, {1.f, 0.f, 1.f}},  // Magenta
-        {{ 0.5f,  0.5f,  0.5f}, {0.f, 1.f, 1.f}},   // Cyan
-        {{-0.5f,  0.5f,  0.5f}, {1.f, 0.64f, 0.0f}}, // Orange
-        {{-0.5f,  0.5f, -0.5f}, {1.f, 0.75f, 0.79f}}  // Pink
+        {{0.5f, -0.5f, -0.5f}, {1.f, 0.f, 0.f}}, // Red
+        {{0.5f, -0.5f, 0.5f}, {0.f, 1.f, 0.f}}, // Green
+        {{-0.5f, -0.5f, 0.5f}, {0.f, 0.f, 1.f}}, // Blue
+        {{-0.5f, -0.5f, -0.5f}, {1.f, 1.f, 0.f}}, // Yellow
+        {{0.5f, 0.5f, -0.5f}, {1.f, 0.f, 1.f}}, // Magenta
+        {{0.5f, 0.5f, 0.5f}, {0.f, 1.f, 1.f}}, // Cyan
+        {{-0.5f, 0.5f, 0.5f}, {1.f, 0.64f, 0.0f}}, // Orange
+        {{-0.5f, 0.5f, -0.5f}, {1.f, 0.75f, 0.79f}} // Pink
     };
 
     static constexpr unsigned int CUBE_INDICES[] = {

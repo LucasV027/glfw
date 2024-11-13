@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.5)
 project(glfw-project)
 
 set(CMAKE_CXX_STANDARD 20)
+set(DATA_DIR \"${CMAKE_SOURCE_DIR}/res\")
 
 add_executable(${PROJECT_NAME} src/main.cpp
         src/Application.cpp
@@ -27,10 +28,6 @@ add_executable(${PROJECT_NAME} src/main.cpp
         src/gl/Texture.cpp
 )
 
-target_include_directories(${PROJECT_NAME} PRIVATE src/extern)
-target_include_directories(${PROJECT_NAME} PRIVATE src/gl)
-
-
 # dependencies
 include(FetchContent)
 
@@ -53,4 +50,7 @@ FetchContent_MakeAvailable(glfw)
 FetchContent_Declare(glm GIT_REPOSITORY https://github.com/g-truc/glm.git GIT_TAG 1.0.1)
 FetchContent_MakeAvailable(glm)
 
+target_include_directories(${PROJECT_NAME} PRIVATE src/extern)
+target_include_directories(${PROJECT_NAME} PRIVATE src/gl)
+target_compile_definitions(${PROJECT_NAME} PRIVATE DATA_DIR=${DATA_DIR})
 target_link_libraries(${PROJECT_NAME} PUBLIC glad glfw glm)
