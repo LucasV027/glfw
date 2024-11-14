@@ -21,18 +21,20 @@ add_executable(${PROJECT_NAME} src/main.cpp
         src/gl/VertexBufferLayout.h
         src/gl/Renderer.cpp
         src/gl/Renderer.h
-        src/Data.h
-        src/extern/stb_image.h
-        src/extern/stb_image.cpp
         src/gl/Texture.h
         src/gl/Texture.cpp
+        src/utils/Data.h
+        src/utils/Color.h
+        src/utils/Color.cpp
         src/scene/Scene.h
         src/scene/BasicScene.h
         src/scene/BasicScene.cpp
-        src/utils/Color.h
-        src/utils/Color.cpp
         src/scene/ClearColor.cpp
         src/scene/ClearColor.h
+        src/extern/stb_image.h
+        src/extern/stb_image.cpp
+        src/utils/Loader.h
+        src/utils/Loader.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE src src/extern src/gl src/scene src/utils)
