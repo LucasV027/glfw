@@ -17,6 +17,8 @@ namespace GL {
         ~Application();
 
     private:
+        void ImGuiMenu();
+
         void InitWindow(int width, int height, const std::string &header);
 
         void InitCallBacks() const;

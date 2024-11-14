@@ -1,9 +1,11 @@
 #include "BasicScene.h"
 
 #include "imgui.h"
-#include "../Data.h"
+
 #include "glm/ext/matrix_clip_space.hpp"
 #include "glm/gtc/matrix_transform.hpp"
+
+#include "Data.h"
 
 namespace GL {
     BasicScene::BasicScene() {

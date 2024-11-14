@@ -31,9 +31,11 @@ add_executable(${PROJECT_NAME} src/main.cpp
         src/scene/BasicScene.cpp
         src/utils/Color.h
         src/utils/Color.cpp
+        src/scene/ClearColor.cpp
+        src/scene/ClearColor.h
 )
 
-target_include_directories(${PROJECT_NAME} PRIVATE src/extern src/gl src/scene src/utils)
+target_include_directories(${PROJECT_NAME} PRIVATE src src/extern src/gl src/scene src/utils)
 target_compile_definitions(${PROJECT_NAME} PRIVATE DATA_DIR=${DATA_DIR})
 
 include(cmake/dependencies.cmake)

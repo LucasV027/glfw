@@ -1,8 +1,9 @@
 #pragma once
+
 #include "IndexBuffer.h"
 #include "Program.h"
 #include "VertexArray.h"
-#include "../Data.h"
+#include "Data.h"
 
 namespace GL {
     class Renderer {

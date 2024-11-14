@@ -11,6 +11,7 @@
 
 #include "Debug.h"
 #include "BasicScene.h"
+#include "ClearColor.h"
 
 namespace GL {
     Application::Application(const int width, const int height, const std::string &title)
@@ -21,22 +22,21 @@ namespace GL {
         scene = new BasicScene();
     }
 
-
     void Application::mainLoop() {
         while (!glfwWindowShouldClose(window)) {
             ImGui_ImplOpenGL3_NewFrame();
             ImGui_ImplGlfw_NewFrame();
             ImGui::NewFrame();
-            scene->OnImGuiRender();
+            ImGuiMenu();
 
+            scene->OnImGuiRender();
             scene->OnUpdate(0.0f);
             scene->OnRender();
-
-            HandleResize();
 
             ImGui::Render();
             ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
+            HandleResize();
             glfwSwapBuffers(window);
             glfwPollEvents();
         }
@@ -88,6 +88,24 @@ namespace GL {
 
         glfwDestroyWindow(window);
         glfwTerminate();
+    }
+
+    void Application::ImGuiMenu() {
+        ImGui::Begin("Menu");
+        if (ImGui::Button("Basic")) {
+            delete scene;
+            scene = new BasicScene();
+            title = "Basic";
+            glfwSetWindowTitle(window, title.c_str());
+        }
+
+        if (ImGui::Button("ClearColor")) {
+            delete scene;
+            scene = new ClearColor();
+            title = "ClearColor";
+            glfwSetWindowTitle(window, title.c_str());
+        }
+        ImGui::End();
     }
 
     void Application::InitCallBacks() const {
