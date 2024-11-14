@@ -3,13 +3,16 @@
 #include <ranges>
 
 namespace GL {
-    VertexArray::VertexArray() : vao() {
-        glGenVertexArrays(1, &vao);
-        glBindVertexArray(vao);
+    VertexArray::VertexArray() : vao(0) {
     }
 
     VertexArray::~VertexArray() {
         glDeleteVertexArrays(1, &vao);
+    }
+
+    void VertexArray::Init() {
+        glGenVertexArrays(1, &vao);
+        glBindVertexArray(vao);
     }
 
     void VertexArray::AddBuffer(const VertexBuffer &vbo, const VertexBufferLayout &layout) const {

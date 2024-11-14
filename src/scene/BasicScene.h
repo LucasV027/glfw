@@ -18,7 +18,7 @@ namespace GL {
     public:
         BasicScene();
 
-        ~BasicScene() override;
+        ~BasicScene() override = default;
 
         void OnUpdate(float deltaTime) override;
 
@@ -27,10 +27,10 @@ namespace GL {
         void OnImGuiRender() override;
 
     private:
-        VertexBuffer *vbo;
-        IndexBuffer *ibo;
-        VertexArray *vao;
-        Texture *texture;
+        VertexBuffer vbo;
+        IndexBuffer ibo;
+        VertexArray vao;
+        Texture texture;
         Program program;
         Renderer renderer;
 

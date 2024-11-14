@@ -7,9 +7,11 @@
 namespace GL {
     class VertexBuffer {
     public:
-        VertexBuffer(const void *data, int size);
+        VertexBuffer();
 
         ~VertexBuffer();
+
+        void Load(const void *data, int size);
 
         void Bind() const;
 

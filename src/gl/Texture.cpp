@@ -7,9 +7,15 @@
 #include "stb_image.h"
 
 namespace GL {
-    Texture::Texture(const std::filesystem::path &filepath) : filepath(filepath),
-                                                              buffer(nullptr), width(0), height(0),
-                                                              bpp(0), id(0) {
+    Texture::Texture() : buffer(nullptr), width(0), height(0), bpp(0), id(0) {
+    }
+
+    Texture::~Texture() {
+        glDeleteTextures(1, &id);
+    }
+
+    void Texture::Load(const std::filesystem::path &filepath) {
+        this->filepath = filepath;
         stbi_set_flip_vertically_on_load(1);
         buffer = stbi_load(filepath.string().c_str(), &width, &height, &bpp, 4);
 
@@ -30,10 +36,6 @@ namespace GL {
         } else {
             std::cerr << "Failed to load texture from: " << filepath.string() << std::endl;
         }
-    }
-
-    Texture::~Texture() {
-        glDeleteTextures(1, &id);
     }
 
     void Texture::Bind(const unsigned int slot) {

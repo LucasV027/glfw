@@ -1,7 +1,11 @@
 #include "IndexBuffer.h"
 
 namespace GL {
-    IndexBuffer::IndexBuffer(const unsigned int *data, const unsigned int count) : id(0), count(count) {
+    IndexBuffer::IndexBuffer() : id(0), count(0) {
+    }
+
+    void IndexBuffer::Load(const unsigned int *data, const unsigned int count) {
+        this->count = count;
         glGenBuffers(1, &id);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(unsigned int), data, GL_STATIC_DRAW);

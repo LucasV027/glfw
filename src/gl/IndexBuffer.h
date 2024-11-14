@@ -7,7 +7,9 @@
 namespace GL {
     class IndexBuffer {
     public:
-        IndexBuffer(const unsigned int *data, unsigned int count);
+        IndexBuffer();
+
+        void Load(const unsigned int *data, unsigned int count);
 
         ~IndexBuffer();
 

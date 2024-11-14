@@ -10,6 +10,8 @@ namespace GL {
 
         ~VertexArray();
 
+        void Init();
+
         void AddBuffer(const VertexBuffer &vbo, const VertexBufferLayout &layout) const;
 
         void Bind() const;

@@ -7,9 +7,11 @@
 namespace GL {
     class Texture {
     public:
-        explicit Texture(const std::filesystem::path &filepath);
+        Texture();
 
         ~Texture();
+
+        void Load(const std::filesystem::path &filepath);
 
         void Bind(unsigned int slot = 0);
 

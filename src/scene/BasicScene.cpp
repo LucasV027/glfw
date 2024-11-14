@@ -8,15 +8,15 @@
 namespace GL {
     BasicScene::BasicScene() {
         // VAO VBO & IBO
-        vao = new VertexArray();
-        vbo = new VertexBuffer(Data::SQUARE_UV, sizeof(Data::SQUARE_UV));
+        vao.Init();
+        vbo.Load(Data::SQUARE_UV, sizeof(Data::SQUARE_UV));
 
         VertexBufferLayout vboLayout;
         vboLayout.Push<float>(3); // Positions
         vboLayout.Push<float>(2); // uv coords
-        vao->AddBuffer(*vbo, vboLayout);
+        vao.AddBuffer(vbo, vboLayout);
 
-        ibo = new IndexBuffer(Data::SQUARE_UV_INDICES, 6);
+        ibo.Load(Data::SQUARE_UV_INDICES, 6);
 
         // Program
         program.Create(vsPath, fsPath);
@@ -30,16 +30,9 @@ namespace GL {
 
         // Texture
         constexpr int slot = 0;
-        texture = new Texture(std::filesystem::path(DATA_DIR "/textures/star.png"));
-        texture->Bind(slot);
+        texture.Load(std::filesystem::path(DATA_DIR "/textures/star.png"));
+        texture.Bind(slot);
         program.SetUniform1i("u_Texture", slot);
-    }
-
-    BasicScene::~BasicScene() {
-        delete vbo;
-        delete ibo;
-        delete vao;
-        delete texture;
     }
 
     void BasicScene::OnUpdate(float deltaTime) {
@@ -51,7 +44,7 @@ namespace GL {
 
         program.Bind();
         program.SetUniformMat4f("mvp", proj * view * model);
-        renderer.Draw(*vao, *ibo, program);
+        renderer.Draw(vao, ibo, program);
     }
 
     void BasicScene::OnImGuiRender() {
