@@ -35,6 +35,8 @@ add_executable(${PROJECT_NAME} src/main.cpp
         src/extern/stb_image.cpp
         src/utils/Loader.h
         src/utils/Loader.cpp
+        src/scene/ColorCube.h
+        src/scene/ColorCube.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE src src/extern src/gl src/scene src/utils)

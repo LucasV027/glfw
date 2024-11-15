@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <format>
+#include <functional>
 
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
@@ -12,6 +13,7 @@
 #include "Debug.h"
 #include "BasicScene.h"
 #include "ClearColor.h"
+#include "ColorCube.h"
 
 namespace GL {
     Application::Application(const int width, const int height, const std::string &title)
@@ -19,19 +21,24 @@ namespace GL {
           aspectRatio(static_cast<float>(width) / static_cast<float>(height)), window(nullptr) {
         InitWindow(width, height, title);
         InitCallBacks();
-        scene = new BasicScene();
+        // scene = new BasicScene();
     }
 
     void Application::mainLoop() {
         while (!glfwWindowShouldClose(window)) {
+            glClearColor(Colors::BLACK.r, Colors::BLACK.g, Colors::BLACK.b, 1.0);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
             ImGui_ImplOpenGL3_NewFrame();
             ImGui_ImplGlfw_NewFrame();
             ImGui::NewFrame();
             ImGuiMenu();
 
-            scene->OnImGuiRender();
-            scene->OnUpdate(0.0f);
-            scene->OnRender();
+            if (scene) {
+                scene->OnImGuiRender();
+                scene->OnUpdate(0.0f);
+                scene->OnRender();
+            }
 
             ImGui::Render();
             ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -86,26 +93,36 @@ namespace GL {
         ImGui_ImplGlfw_Shutdown();
         ImGui::DestroyContext();
 
+        delete scene;
+
         glfwDestroyWindow(window);
         glfwTerminate();
     }
 
     void Application::ImGuiMenu() {
-        ImGui::Begin("Menu");
-        if (ImGui::Button("Basic")) {
-            delete scene;
-            scene = new BasicScene();
-            title = "Basic";
-            glfwSetWindowTitle(window, title.c_str());
-        }
+        using SceneFactory = std::function<Scene*()>;
 
-        if (ImGui::Button("ClearColor")) {
-            delete scene;
-            scene = new ClearColor();
-            title = "ClearColor";
-            glfwSetWindowTitle(window, title.c_str());
+        static const std::unordered_map<std::string, SceneFactory> sceneRegistry = {
+            {"Basic", []() { return new BasicScene(); }},
+            {"ClearColor", []() { return new ClearColor(); }},
+            {"Cube", []() { return new ColorCube(); }}
+        };
+
+        if (scene) {
+            if (ImGui::Button("<-")) {
+                delete scene;
+                scene = nullptr;
+            }
+        } else {
+            for (const auto &[name, factory]: sceneRegistry) {
+                if (ImGui::Button(name.c_str())) {
+                    delete scene;
+                    scene = factory();
+                    title = name;
+                    glfwSetWindowTitle(window, title.c_str());
+                }
+            }
         }
-        ImGui::End();
     }
 
     void Application::InitCallBacks() const {
