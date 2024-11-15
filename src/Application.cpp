@@ -17,59 +17,56 @@
 
 namespace GL {
     Application::Application(const int width, const int height, const std::string &title)
-        : title(title), width(width), height(height),
-          aspectRatio(static_cast<float>(width) / static_cast<float>(height)), window(nullptr) {
-        InitWindow(width, height, title);
-        InitCallBacks();
-        // scene = new BasicScene();
+        : title(title),
+          width(width),
+          height(height),
+          aspectRatio(static_cast<float>(width) / static_cast<float>(height)),
+          window(nullptr), scene(nullptr) {
+        InitGLFW();
+
+        CreateWindow();
+
+        InitGLAD();
+
+        ConfigureOpenGL();
+
+        InitImGui();
     }
 
-    void Application::mainLoop() {
-        while (!glfwWindowShouldClose(window)) {
-            glClearColor(Colors::BLACK.r, Colors::BLACK.g, Colors::BLACK.b, 1.0);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-            ImGui_ImplOpenGL3_NewFrame();
-            ImGui_ImplGlfw_NewFrame();
-            ImGui::NewFrame();
-            ImGuiMenu();
-
-            if (scene) {
-                scene->OnImGuiRender();
-                scene->OnUpdate(0.0f);
-                scene->OnRender();
-            }
-
-            ImGui::Render();
-            ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-            HandleResize();
-            glfwSwapBuffers(window);
-            glfwPollEvents();
+    void Application::InitGLFW() {
+        if (!glfwInit()) {
+            throw std::runtime_error("Failed to initialize GLFW.");
         }
-    }
 
-    void Application::InitWindow(const int width, const int height, const std::string &header) {
-        glfwInit();
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 
-        window = glfwCreateWindow(width, height, header.c_str(), nullptr, nullptr);
+        glfwSetErrorCallback([](const int error, const char *description) {
+            std::cerr << "GLFW Error (" << error << "): " << description << std::endl;
+        });
+    }
+
+    void Application::CreateWindow() {
+        window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
         if (!window) {
             glfwTerminate();
             throw std::runtime_error("Failed to create GLFW window.");
         }
 
         glfwMakeContextCurrent(window);
-        glfwSwapInterval(1);
+        glfwSwapInterval(1); // V-Sync
+    }
 
+    void Application::InitGLAD() {
         if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
             glfwTerminate();
-            throw std::runtime_error("Failed to initialize GLAD");
+            throw std::runtime_error("Failed to initialize GLAD.");
         }
+    }
 
+    void Application::ConfigureOpenGL() {
         GLint flags;
         glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
         if (flags & GL_CONTEXT_FLAG_DEBUG_BIT) {
@@ -80,7 +77,9 @@ namespace GL {
         }
 
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    }
 
+    void Application::InitImGui() {
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
         ImGui_ImplGlfw_InitForOpenGL(window, true);
@@ -88,21 +87,8 @@ namespace GL {
         ImGui::StyleColorsClassic();
     }
 
-    Application::~Application() {
-        ImGui_ImplOpenGL3_Shutdown();
-        ImGui_ImplGlfw_Shutdown();
-        ImGui::DestroyContext();
-
-        delete scene;
-
-        glfwDestroyWindow(window);
-        glfwTerminate();
-    }
-
     void Application::ImGuiMenu() {
-        using SceneFactory = std::function<Scene*()>;
-
-        static const std::unordered_map<std::string, SceneFactory> sceneRegistry = {
+        static const std::unordered_map<std::string, std::function<Scene*()> > sceneRegistry = {
             {"Basic", []() { return new BasicScene(); }},
             {"ClearColor", []() { return new ClearColor(); }},
             {"Cube", []() { return new ColorCube(); }}
@@ -125,18 +111,38 @@ namespace GL {
         }
     }
 
-    void Application::InitCallBacks() const {
-        glfwSetErrorCallback([](const int error, const char *description) {
-            std::cerr << error << ": " << description << std::endl;
-        });
+    void Application::mainLoop() {
+        while (!glfwWindowShouldClose(window)) {
+            glClearColor(Colors::BLACK.r, Colors::BLACK.g, Colors::BLACK.b, 1.0);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        glfwSetKeyCallback(window, [](GLFWwindow *window, int key, int, int action, int) {
-            if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-                glfwSetWindowShouldClose(window, GLFW_TRUE);
-        });
+            ImGui_ImplOpenGL3_NewFrame();
+            ImGui_ImplGlfw_NewFrame();
+            ImGui::NewFrame();
+            ImGuiMenu();
+
+            if (scene) {
+                scene->OnImGuiRender();
+                scene->OnUpdate(0.0f);
+                scene->OnRender();
+            }
+
+            ImGui::Render();
+            ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+            HandleEvents();
+            glfwSwapBuffers(window);
+            glfwPollEvents();
+        }
     }
 
-    void Application::HandleResize() {
+    void Application::HandleEvents() {
+        // Key events
+        if (int action = glfwGetKey(window, GLFW_KEY_ESCAPE); action == GLFW_PRESS) {
+            glfwSetWindowShouldClose(window, GLFW_TRUE);
+        }
+
+        // Resize event
         int newWidth, newHeight;
         glfwGetWindowSize(window, &newWidth, &newHeight);
         if (newWidth != width || newHeight != height) {
@@ -146,5 +152,17 @@ namespace GL {
             height = newHeight;
             aspectRatio = static_cast<float>(width) / static_cast<float>(height);
         }
+    }
+
+
+    Application::~Application() {
+        ImGui_ImplOpenGL3_Shutdown();
+        ImGui_ImplGlfw_Shutdown();
+        ImGui::DestroyContext();
+
+        delete scene;
+
+        glfwDestroyWindow(window);
+        glfwTerminate();
     }
 }

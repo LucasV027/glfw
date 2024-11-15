@@ -17,13 +17,22 @@ namespace GL {
         ~Application();
 
     private:
+        // Initialization
+        void InitGLFW();
+
+        void CreateWindow();
+
+        void InitGLAD();
+
+        void ConfigureOpenGL();
+
+        void InitImGui();
+
+        // Render
         void ImGuiMenu();
 
-        void InitWindow(int width, int height, const std::string &header);
-
-        void InitCallBacks() const;
-
-        void HandleResize();
+        // Events
+        void HandleEvents();
 
     private:
         std::string title;
