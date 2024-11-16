@@ -20,7 +20,7 @@ namespace GL {
 
         ~BasicScene() override = default;
 
-        void OnUpdate(float deltaTime) override;
+        void OnUpdate(float deltaTime, GLFWwindow *window) override;
 
         void OnRender() override;
 

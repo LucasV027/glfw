@@ -6,6 +6,7 @@
 
 #include "Renderer.h"
 #include "Texture.h"
+#include "Camera.h"
 
 namespace GL {
     class ColorCube final : public Scene {
@@ -14,7 +15,7 @@ namespace GL {
 
         ~ColorCube() override = default;
 
-        void OnUpdate(float deltaTime) override;
+        void OnUpdate(float deltaTime, GLFWwindow *window) override;
 
         void OnRender() override;
 
@@ -27,6 +28,7 @@ namespace GL {
         Texture texture;
         Program program;
         Renderer renderer;
+        Camera camera;
 
         glm::mat4 proj{}, view{}, model{};
         glm::vec3 translation{};

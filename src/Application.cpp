@@ -89,9 +89,9 @@ namespace GL {
 
     void Application::ImGuiMenu() {
         static const std::unordered_map<std::string, std::function<Scene*()> > sceneRegistry = {
-            {"Basic", []() { return new BasicScene(); }},
-            {"ClearColor", []() { return new ClearColor(); }},
-            {"Cube", []() { return new ColorCube(); }}
+            {"Basic", [] { return new BasicScene(); }},
+            {"ClearColor", [] { return new ClearColor(); }},
+            {"Cube", [] { return new ColorCube(); }}
         };
 
         if (scene) {
@@ -123,7 +123,7 @@ namespace GL {
 
             if (scene) {
                 scene->OnImGuiRender();
-                scene->OnUpdate(0.0f);
+                scene->OnUpdate(0.0f, window);
                 scene->OnRender();
             }
 

@@ -1,5 +1,8 @@
 #pragma once
 
+#include <glad/glad.h> // Do not remove
+#include <GLFW/glfw3.h>
+
 namespace GL {
     class Scene {
     public:
@@ -7,7 +10,7 @@ namespace GL {
 
         virtual ~Scene() = default;
 
-        virtual void OnUpdate(float deltaTime) {
+        virtual void OnUpdate(float deltaTime, GLFWwindow *window) {
         }
 
         virtual void OnRender() {

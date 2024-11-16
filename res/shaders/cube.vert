@@ -26,5 +26,5 @@ mat3 Rw(vec3 w, float thetha)
 void main()
 {
     color = vertexColor;
-    gl_Position = vec4(vertexPos * Rw(vec3(1., 1., 1.), iTime), 1.0);
+    gl_Position = mvp * vec4(vertexPos * Rw(vec3(1., 1., 1.), iTime), 1.0);
 }
