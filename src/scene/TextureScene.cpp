@@ -1,4 +1,4 @@
-#include "BasicScene.h"
+#include "TextureScene.h"
 
 #include "imgui.h"
 
@@ -8,7 +8,7 @@
 #include "Data.h"
 
 namespace GL {
-    BasicScene::BasicScene() {
+    TextureScene::TextureScene() {
         // VAO VBO & IBO
         vao.Init();
         vbo.Load(Data::SQUARE_UV, sizeof(Data::SQUARE_UV));
@@ -37,11 +37,11 @@ namespace GL {
         program.SetUniform1i("u_Texture", slot);
     }
 
-    void BasicScene::OnUpdate(float deltaTime, GLFWwindow *window) {
+    void TextureScene::OnUpdate(float deltaTime, GLFWwindow *window) {
         model = glm::translate(glm::mat4(1.0f), translation);
     }
 
-    void BasicScene::OnRender() {
+    void TextureScene::OnRender() {
         renderer.Clear();
 
         program.Bind();
@@ -49,9 +49,8 @@ namespace GL {
         renderer.Draw(vao, ibo, program);
     }
 
-    void BasicScene::OnImGuiRender() {
+    void TextureScene::OnImGuiRender() {
         ImGui::SliderFloat("Translate X", &translation.x, -400.0f, 400.0f);
         ImGui::SliderFloat("Translate Y", &translation.y, -300.0f, 300.0f);
-        ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
     }
 }

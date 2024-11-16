@@ -4,11 +4,11 @@
 #include "Scene.h"
 
 namespace GL {
-    class ClearColor final : public Scene {
+    class ClearColorScene final : public Scene {
     public:
-        ClearColor() = default;
+        ClearColorScene() = default;
 
-        ~ClearColor() override = default;
+        ~ClearColorScene() override = default;
 
         void OnRender() override;
 

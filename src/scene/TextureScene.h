@@ -14,11 +14,11 @@
 #include "Scene.h"
 
 namespace GL {
-    class BasicScene final : public Scene {
+    class TextureScene final : public Scene {
     public:
-        BasicScene();
+        TextureScene();
 
-        ~BasicScene() override = default;
+        ~TextureScene() override = default;
 
         void OnUpdate(float deltaTime, GLFWwindow *window) override;
 
@@ -37,8 +37,8 @@ namespace GL {
         glm::mat4 proj{}, view{}, model{};
         glm::vec3 translation{};
 
-        const std::filesystem::path fsPath = DATA_DIR "/shaders/main.frag";
-        const std::filesystem::path vsPath = DATA_DIR "/shaders/main.vert";
+        const std::filesystem::path fsPath = DATA_DIR "/shaders/texture.frag";
+        const std::filesystem::path vsPath = DATA_DIR "/shaders/texture.vert";
     };
 };
 

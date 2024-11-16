@@ -11,8 +11,8 @@
 #include "glm/glm.hpp"
 
 #include "Debug.h"
-#include "BasicScene.h"
-#include "ClearColor.h"
+#include "TextureScene.h"
+#include "ClearColorScene.h"
 #include "CubeScene.h"
 
 namespace GL {
@@ -89,10 +89,12 @@ namespace GL {
 
     void Application::ImGuiMenu() {
         static const std::unordered_map<std::string, std::function<Scene*()> > sceneRegistry = {
-            {"Basic", [] { return new BasicScene(); }},
-            {"ClearColor", [] { return new ClearColor(); }},
+            {"Texture", [] { return new TextureScene(); }},
+            {"ClearColor", [] { return new ClearColorScene(); }},
             {"Cube", [] { return new CubeScene(); }}
         };
+
+        ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
 
         if (scene) {
             if (ImGui::Button("<-")) {

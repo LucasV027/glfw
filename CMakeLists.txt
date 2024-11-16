@@ -27,16 +27,16 @@ add_executable(${PROJECT_NAME} src/main.cpp
         src/utils/Color.h
         src/utils/Color.cpp
         src/scene/Scene.h
-        src/scene/BasicScene.h
-        src/scene/BasicScene.cpp
-        src/scene/ClearColor.cpp
-        src/scene/ClearColor.h
+        src/scene/TextureScene.h
+        src/scene/TextureScene.cpp
+        src/scene/ClearColorScene.cpp
+        src/scene/ClearColorScene.h
         src/extern/stb_image.h
         src/extern/stb_image.cpp
         src/utils/Loader.h
         src/utils/Loader.cpp
-        src/scene/ColorCube.h
-        src/scene/ColorCube.cpp
+        src/scene/CubeScene.h
+        src/scene/CubeScene.cpp
         src/gl/Camera.h
         src/gl/Camera.cpp
 )
