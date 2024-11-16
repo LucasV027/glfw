@@ -13,7 +13,7 @@
 #include "Debug.h"
 #include "BasicScene.h"
 #include "ClearColor.h"
-#include "ColorCube.h"
+#include "CubeScene.h"
 
 namespace GL {
     Application::Application(const int width, const int height, const std::string &title)
@@ -91,7 +91,7 @@ namespace GL {
         static const std::unordered_map<std::string, std::function<Scene*()> > sceneRegistry = {
             {"Basic", [] { return new BasicScene(); }},
             {"ClearColor", [] { return new ClearColor(); }},
-            {"Cube", [] { return new ColorCube(); }}
+            {"Cube", [] { return new CubeScene(); }}
         };
 
         if (scene) {
@@ -138,7 +138,7 @@ namespace GL {
 
     void Application::HandleEvents() {
         // Key events
-        if (int action = glfwGetKey(window, GLFW_KEY_ESCAPE); action == GLFW_PRESS) {
+        if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
             glfwSetWindowShouldClose(window, GLFW_TRUE);
         }
 

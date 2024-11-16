@@ -9,11 +9,11 @@
 #include "Camera.h"
 
 namespace GL {
-    class ColorCube final : public Scene {
+    class CubeScene final : public Scene {
     public:
-        ColorCube();
+        CubeScene();
 
-        ~ColorCube() override = default;
+        ~CubeScene() override = default;
 
         void OnUpdate(float deltaTime, GLFWwindow *window) override;
 
@@ -30,8 +30,9 @@ namespace GL {
         Renderer renderer;
         Camera camera;
 
-        glm::mat4 proj{}, view{}, model{};
-        glm::vec3 translation{};
+        glm::mat4 model = glm::mat4(1.0f);
+        float rotationSpeed = 0.0f;
+        glm::vec3 rotationAxis = glm::vec3(1.0f, 1.0f, 1.0f);
 
         const std::filesystem::path fsPath = DATA_DIR "/shaders/cube.frag";
         const std::filesystem::path vsPath = DATA_DIR "/shaders/cube.vert";

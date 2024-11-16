@@ -3,7 +3,7 @@
 #include<glm/gtc/matrix_transform.hpp>
 
 namespace GL {
-	Camera::Camera(const glm::vec3 &orientation) : position(0.0f, 0.0f, -2.0f),
+	Camera::Camera(const glm::vec3 &orientation) : position(0.0f, 0.0f, -5.0f),
 	                                               up(0.f, 1.f, 0.f),
 	                                               orientation(normalize(orientation)) {
 	}
@@ -19,9 +19,9 @@ namespace GL {
 
 	void Camera::MoveForward() { position += speed * orientation; }
 	void Camera::MoveBackward() { position -= speed * orientation; }
-	void Camera::MoveLeft() { position += speed * -glm::normalize(glm::cross(orientation, up)); }
-	void Camera::MoveRight() { position += speed * glm::normalize(glm::cross(orientation, up)); }
+	void Camera::MoveLeft() { position += speed * -normalize(cross(orientation, up)); }
+	void Camera::MoveRight() { position += speed * normalize(cross(orientation, up)); }
 	void Camera::MoveUp() { position += speed * up; }
 	void Camera::MoveDown() { position -= speed * up; }
-	void Camera::SetSpeed(float newSpeed) { speed = newSpeed; }
+	void Camera::SetSpeed(const float newSpeed) { speed = newSpeed; }
 }

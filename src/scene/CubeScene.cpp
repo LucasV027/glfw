@@ -1,7 +1,10 @@
-#include "ColorCube.h"
+#include "CubeScene.h"
+
+#include "imgui.h"
+#include "glm/gtc/matrix_transform.hpp"
 
 namespace GL {
-	ColorCube::ColorCube() : camera(glm::vec3(0.0f, 0.0f, 0.1f)) {
+	CubeScene::CubeScene() : camera(glm::vec3(0.0f, 0.0f, 0.1f)) {
 		renderer.Init();
 
 		vao.Init();
@@ -16,12 +19,12 @@ namespace GL {
 		ibo.Load(Data::CUBE_COLOR_INDICES, 36);
 
 		program.Create(vsPath, fsPath);
-		program.LocateVariable("iTime");
 		program.LocateVariable("mvp");
 	}
 
-	void ColorCube::OnUpdate(float deltaTime, GLFWwindow *window) {
+	void CubeScene::OnUpdate(float deltaTime, GLFWwindow *window) {
 		camera.Compute(45.f, 1.33f, 0.1f, 100.0f);
+		model = rotate(model, rotationSpeed, rotationAxis);
 
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) camera.MoveForward();
 		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) camera.MoveLeft();
@@ -34,13 +37,15 @@ namespace GL {
 	}
 
 
-	void ColorCube::OnRender() {
+	void CubeScene::OnRender() {
 		program.Bind();
-		program.SetUniform1f("iTime", static_cast<float>(glfwGetTime()));
-		program.SetUniformMat4f("mvp", camera.GetViewMatrix());
+		program.SetUniformMat4f("mvp", camera.GetViewMatrix() * model);
 		renderer.Draw(vao, ibo, program);
 	}
 
-	void ColorCube::OnImGuiRender() {
+	void CubeScene::OnImGuiRender() {
+		ImGui::SliderFloat("Rotation Speed", &rotationSpeed, 0.0f, 0.2f);
+		// ImGui::SliderFloat("Scale", &scale, 0.0f, 1.0f);
+		ImGui::SliderFloat3("Rotation Axis", &rotationAxis.x, -1.0f, 1.0f);
 	}
 }
