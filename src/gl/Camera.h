@@ -5,35 +5,24 @@
 namespace GL {
     class Camera {
     public:
-        explicit Camera(const glm::vec3 &orientation);
+        Camera();
 
         void Compute(float fovDeg, float aspectRatio, float nearPlane, float farPlane);
 
-        [[nodiscard]] glm::mat4 GetViewMatrix() const;
+        [[nodiscard]] const glm::mat4 &GetViewMatrix() const;
 
-        void MoveForward();
+        [[nodiscard]] const glm::mat4 &GetProjectionMatrix() const;
 
-        void MoveBackward();
+        void SetPosition(const glm::vec3 &position);
 
-        void MoveLeft();
+        void SetOrientation(const glm::vec3 &orientation);
 
-        void MoveRight();
-
-        void MoveUp();
-
-        void MoveDown();
-
-        void SetSpeed(float newSpeed);
+        void SetUp(const glm::vec3 &up);
 
     private:
         glm::vec3 position;
         glm::vec3 up;
         glm::vec3 orientation;
-
-        int width = 800;
-        int height = 600;
-
-        float speed = 0.1f;
 
         glm::mat4 view = glm::mat4(1.0f);
         glm::mat4 proj = glm::mat4(1.0f);

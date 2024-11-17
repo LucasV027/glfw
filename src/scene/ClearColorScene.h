@@ -1,7 +1,9 @@
 #pragma once
 
-#include "Color.h"
 #include "Scene.h"
+
+#include "Color.h"
+#include "Renderer.h"
 
 namespace GL {
     class ClearColorScene final : public Scene {
@@ -10,11 +12,12 @@ namespace GL {
 
         ~ClearColorScene() override = default;
 
-        void OnRender() override;
+        void OnRender(const glm::mat4& pv) override;
 
         void OnImGuiRender() override;
 
     private:
+        Renderer renderer;
         Color clearColor = Colors::BLUE;
     };
 }

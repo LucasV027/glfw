@@ -1,13 +1,10 @@
 #include "ClearColorScene.h"
 
-#include <glad/glad.h>
-
 #include "imgui.h"
 
 namespace GL {
-    void ClearColorScene::OnRender() {
-        glClearColor(clearColor.r, clearColor.g, clearColor.b, 1.0);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    void ClearColorScene::OnRender(const glm::mat4 &pv) {
+        renderer.Clear(clearColor);
     }
 
     void ClearColorScene::OnImGuiRender() {

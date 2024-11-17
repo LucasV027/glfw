@@ -2,6 +2,8 @@
 
 #include <filesystem>
 
+#include "Scene.h"
+
 #include "VertexBuffer.h"
 #include "VertexArray.h"
 #include "IndexBuffer.h"
@@ -9,9 +11,8 @@
 #include "Program.h"
 #include "Renderer.h"
 
-#include <glm/glm.hpp>
+#include "glm/glm.hpp"
 
-#include "Scene.h"
 
 namespace GL {
     class TextureScene final : public Scene {
@@ -20,9 +21,9 @@ namespace GL {
 
         ~TextureScene() override = default;
 
-        void OnUpdate(double deltaTime, GLFWwindow *window) override;
+        void OnUpdate(double deltaTime) override;
 
-        void OnRender() override;
+        void OnRender(const glm::mat4& pv) override;
 
         void OnImGuiRender() override;
 

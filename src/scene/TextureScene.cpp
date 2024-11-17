@@ -1,5 +1,7 @@
 #include "TextureScene.h"
 
+#include "Application.h"
+#include "Application.h"
 #include "imgui.h"
 
 #include "glm/ext/matrix_clip_space.hpp"
@@ -37,11 +39,11 @@ namespace GL {
         program.SetUniform1i("u_Texture", slot);
     }
 
-    void TextureScene::OnUpdate(double deltaTime, GLFWwindow *window) {
+    void TextureScene::OnUpdate(double deltaTime) {
         model = translate(glm::mat4(1.0f), translation);
     }
 
-    void TextureScene::OnRender() {
+    void TextureScene::OnRender(const glm::mat4& pv) {
         renderer.Clear();
 
         program.Bind();

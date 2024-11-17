@@ -4,7 +4,7 @@
 #include "glm/gtc/matrix_transform.hpp"
 
 namespace GL {
-	CubeScene::CubeScene() : camera(glm::vec3(0.0f, 0.0f, 0.1f)) {
+	CubeScene::CubeScene() {
 		renderer.Init();
 
 		vao.Init();
@@ -22,28 +22,17 @@ namespace GL {
 		program.LocateVariable("mvp");
 	}
 
-	void CubeScene::OnUpdate(const double deltaTime, GLFWwindow *window) {
-		camera.Compute(45.f, 1.33f, 0.1f, 100.0f);
-
+	void CubeScene::OnUpdate(const double deltaTime) {
 		model = glm::mat4(1.0f);
 		rotationMatrix = rotate(rotationMatrix, rotationSpeed * (float) deltaTime, normalize(rotationAxis));
 		model = rotationMatrix;
 		model = glm::scale(model, scale);
-
-		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) camera.MoveForward();
-		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) camera.MoveLeft();
-		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) camera.MoveBackward();
-		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) camera.MoveRight();
-		if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) camera.MoveUp();
-		if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) camera.MoveDown();
-		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) camera.SetSpeed(0.4f);
-		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE) camera.SetSpeed(0.1f);
 	}
 
 
-	void CubeScene::OnRender() {
+	void CubeScene::OnRender(const glm::mat4 &pv) {
 		program.Bind();
-		program.SetUniformMat4f("mvp", camera.GetViewMatrix() * model);
+		program.SetUniformMat4f("mvp", pv * model);
 		renderer.Draw(vao, ibo, program);
 	}
 

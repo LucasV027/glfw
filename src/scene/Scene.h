@@ -1,7 +1,6 @@
 #pragma once
 
-#include <glad/glad.h> // Do not remove
-#include <GLFW/glfw3.h>
+#include "glm/glm.hpp"
 
 namespace GL {
     class Scene {
@@ -10,10 +9,10 @@ namespace GL {
 
         virtual ~Scene() = default;
 
-        virtual void OnUpdate(double deltaTime, GLFWwindow *window) {
+        virtual void OnUpdate(double deltaTime) {
         }
 
-        virtual void OnRender() {
+        virtual void OnRender(const glm::mat4& pv) {
         }
 
         virtual void OnImGuiRender() {

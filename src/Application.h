@@ -5,6 +5,7 @@
 #include <glad/glad.h> // Do not remove
 #include <GLFW/glfw3.h>
 
+#include "Camera.h"
 #include "Scene.h"
 
 namespace GL {
@@ -28,6 +29,8 @@ namespace GL {
 
         void InitImGui();
 
+        void InitCamera();
+
         // Render
         void ImGuiMenu();
 
@@ -41,6 +44,7 @@ namespace GL {
         float aspectRatio;
 
         GLFWwindow *window;
+        Camera camera;
 
         Scene *scene;
     };

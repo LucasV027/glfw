@@ -6,7 +6,6 @@
 
 #include "Renderer.h"
 #include "Texture.h"
-#include "Camera.h"
 
 namespace GL {
     class CubeScene final : public Scene {
@@ -15,9 +14,9 @@ namespace GL {
 
         ~CubeScene() override = default;
 
-        void OnUpdate(double deltaTime, GLFWwindow *window) override;
+        void OnUpdate(double deltaTime) override;
 
-        void OnRender() override;
+        void OnRender(const glm::mat4 &pv) override;
 
         void OnImGuiRender() override;
 
@@ -28,7 +27,6 @@ namespace GL {
         Texture texture;
         Program program;
         Renderer renderer;
-        Camera camera;
 
         // Transforms
         glm::mat4 model = glm::mat4(1.0f);

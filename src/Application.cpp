@@ -21,16 +21,13 @@ namespace GL {
           width(width),
           height(height),
           aspectRatio(static_cast<float>(width) / static_cast<float>(height)),
-          window(nullptr), scene(nullptr) {
+          window(nullptr), camera(), scene(nullptr) {
         InitGLFW();
-
         CreateWindow();
-
         InitGLAD();
-
         ConfigureOpenGL();
-
         InitImGui();
+        InitCamera();
     }
 
     void Application::InitGLFW() {
@@ -87,6 +84,14 @@ namespace GL {
         ImGui::StyleColorsClassic();
     }
 
+    void Application::InitCamera() {
+        camera.SetPosition(glm::vec3(0.0f, 0.0f, -5.0f));
+        camera.SetOrientation(glm::vec3(0.0f, 0.0f, 1.0f));
+        camera.SetUp(glm::vec3(0.0f, 1.0f, 0.0f));
+
+        camera.Compute(45.f, aspectRatio, 0.1f, 100.0f);
+    }
+
     void Application::ImGuiMenu() {
         static const std::unordered_map<std::string, std::function<Scene*()> > sceneRegistry = {
             {"Texture", [] { return new TextureScene(); }},
@@ -133,8 +138,8 @@ namespace GL {
 
             if (scene) {
                 scene->OnImGuiRender();
-                scene->OnUpdate(deltaTime, window);
-                scene->OnRender();
+                scene->OnUpdate(deltaTime);
+                scene->OnRender(camera.GetProjectionMatrix() * camera.GetViewMatrix());
             }
 
             ImGui::Render();
