@@ -37,6 +37,8 @@ namespace GL {
         // Events
         void HandleEvents();
 
+        void CameraEvents();
+
     private:
         std::string title;
         int width;
@@ -44,9 +46,13 @@ namespace GL {
         float aspectRatio;
 
         GLFWwindow *window;
-        Camera camera;
-
         Scene *scene;
+
+        // Camera
+        Camera camera;
+        bool firstClick = true;
+        float speed = 0.1f;
+        float sensitivity = 100.0f;
     };
 }
 

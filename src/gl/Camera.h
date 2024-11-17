@@ -13,6 +13,12 @@ namespace GL {
 
         [[nodiscard]] const glm::mat4 &GetProjectionMatrix() const;
 
+        [[nodiscard]] glm::vec3 &GetPosition();
+
+        [[nodiscard]] glm::vec3 &GetUp();
+
+        [[nodiscard]] glm::vec3 &GetOrientation();
+
         void SetPosition(const glm::vec3 &position);
 
         void SetOrientation(const glm::vec3 &orientation);

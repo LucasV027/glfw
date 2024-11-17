@@ -21,6 +21,18 @@ namespace GL {
 		return proj;
 	}
 
+	glm::vec3 &Camera::GetPosition() {
+		return position;
+	}
+
+	glm::vec3 &Camera::GetUp() {
+		return up;
+	}
+
+	glm::vec3 &Camera::GetOrientation() {
+		return orientation;
+	}
+
 
 	void Camera::SetPosition(const glm::vec3 &position) {
 		this->position = position;
