@@ -37,8 +37,8 @@ namespace GL {
         program.SetUniform1i("u_Texture", slot);
     }
 
-    void TextureScene::OnUpdate(float deltaTime, GLFWwindow *window) {
-        model = glm::translate(glm::mat4(1.0f), translation);
+    void TextureScene::OnUpdate(double deltaTime, GLFWwindow *window) {
+        model = translate(glm::mat4(1.0f), translation);
     }
 
     void TextureScene::OnRender() {

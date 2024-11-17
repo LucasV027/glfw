@@ -114,7 +114,15 @@ namespace GL {
     }
 
     void Application::mainLoop() {
+        double currentFrame = glfwGetTime();
+        double lastFrame = currentFrame;
+        double deltaTime;
+
         while (!glfwWindowShouldClose(window)) {
+            currentFrame = glfwGetTime();
+            deltaTime = currentFrame - lastFrame;
+            lastFrame = currentFrame;
+
             glClearColor(Colors::BLACK.r, Colors::BLACK.g, Colors::BLACK.b, 1.0);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -125,7 +133,7 @@ namespace GL {
 
             if (scene) {
                 scene->OnImGuiRender();
-                scene->OnUpdate(0.0f, window);
+                scene->OnUpdate(deltaTime, window);
                 scene->OnRender();
             }
 

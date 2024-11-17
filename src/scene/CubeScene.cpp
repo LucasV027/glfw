@@ -22,9 +22,13 @@ namespace GL {
 		program.LocateVariable("mvp");
 	}
 
-	void CubeScene::OnUpdate(float deltaTime, GLFWwindow *window) {
+	void CubeScene::OnUpdate(const double deltaTime, GLFWwindow *window) {
 		camera.Compute(45.f, 1.33f, 0.1f, 100.0f);
-		model = rotate(model, rotationSpeed, rotationAxis);
+
+		model = glm::mat4(1.0f);
+		rotationMatrix = rotate(rotationMatrix, rotationSpeed * (float) deltaTime, normalize(rotationAxis));
+		model = rotationMatrix;
+		model = glm::scale(model, scale);
 
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) camera.MoveForward();
 		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) camera.MoveLeft();
@@ -44,8 +48,8 @@ namespace GL {
 	}
 
 	void CubeScene::OnImGuiRender() {
-		ImGui::SliderFloat("Rotation Speed", &rotationSpeed, 0.0f, 0.2f);
-		// ImGui::SliderFloat("Scale", &scale, 0.0f, 1.0f);
+		ImGui::SliderFloat("Rotation Speed", &rotationSpeed, 0.0f, 10.0f);
 		ImGui::SliderFloat3("Rotation Axis", &rotationAxis.x, -1.0f, 1.0f);
+		ImGui::SliderFloat3("Scale", &scale.x, 1.0f, 10.0f);
 	}
 }

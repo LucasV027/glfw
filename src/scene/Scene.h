@@ -10,7 +10,7 @@ namespace GL {
 
         virtual ~Scene() = default;
 
-        virtual void OnUpdate(float deltaTime, GLFWwindow *window) {
+        virtual void OnUpdate(double deltaTime, GLFWwindow *window) {
         }
 
         virtual void OnRender() {
