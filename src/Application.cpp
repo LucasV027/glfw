@@ -171,7 +171,7 @@ namespace GL {
 		if (newWidth != width || newHeight != height) {
 			glViewport(0, 0, newWidth, newHeight);
 
-			width = newHeight;
+			width = newWidth;
 			height = newHeight;
 			aspectRatio = static_cast<float>(width) / static_cast<float>(height);
 		}
