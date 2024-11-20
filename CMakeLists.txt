@@ -27,7 +27,6 @@ add_executable(${PROJECT_NAME}
         src/gl/Texture.h
         src/gl/Texture.cpp
 
-        src/utils/Data.h
         src/utils/Color.h
         src/utils/Color.cpp
 

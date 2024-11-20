@@ -1,26 +1,36 @@
 #include "TextureScene.h"
 
-#include "Application.h"
-#include "Application.h"
 #include "imgui.h"
 
 #include "glm/ext/matrix_clip_space.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
-#include "Data.h"
-
 namespace GL {
     TextureScene::TextureScene() {
+        static constexpr float SQUARE_UV[] =
+        {
+            300.f, 200.f, -0.5f, 0.0f, 0.0f,
+            500.f, 200.f, -0.5f, 1.0f, 0.0f,
+            500.f, 400.f, -0.5f, 1.0f, 1.0f,
+            300.f, 400.f, -0.5f, 0.0f, 1.0f
+        };
+
+        static constexpr unsigned int SQUARE_UV_INDICES[] = {
+            0, 1, 2,
+            2, 3, 0
+        };
+
+
         // VAO VBO & IBO
         vao.Init();
-        vbo.Load(Data::SQUARE_UV, sizeof(Data::SQUARE_UV));
+        vbo.Load(SQUARE_UV, sizeof(SQUARE_UV));
 
         VertexBufferLayout vboLayout;
         vboLayout.Push<float>(3); // Positions
         vboLayout.Push<float>(2); // uv coords
         vao.AddBuffer(vbo, vboLayout);
 
-        ibo.Load(Data::SQUARE_UV_INDICES, 6);
+        ibo.Load(SQUARE_UV_INDICES, 6);
 
         // Program
         program.Create(vsPath, fsPath);
@@ -43,7 +53,7 @@ namespace GL {
         model = translate(glm::mat4(1.0f), translation);
     }
 
-    void TextureScene::OnRender(const glm::mat4& pv) {
+    void TextureScene::OnRender(const glm::mat4 &pv) {
         renderer.Clear();
 
         program.Bind();

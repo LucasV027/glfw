@@ -3,7 +3,7 @@
 #include "IndexBuffer.h"
 #include "Program.h"
 #include "VertexArray.h"
-#include "Data.h"
+#include "Color.h"
 
 namespace GL {
     class Renderer {

@@ -5,10 +5,37 @@
 
 namespace GL {
 	CubeScene::CubeScene() {
+		static constexpr float CUBE_COLOR[] = {
+			0.5f, -0.5f, -0.5f, 1.f, 0.f, 0.f, // Red
+			0.5f, -0.5f, 0.5f, 0.f, 1.f, 0.f, // Green
+			-0.5f, -0.5f, 0.5f, 0.f, 0.f, 1.f, // Blue
+			-0.5f, -0.5f, -0.5f, 1.f, 1.f, 0.f, // Yellow
+			0.5f, 0.5f, -0.5f, 1.f, 0.f, 1.f, // Magenta
+			0.5f, 0.5f, 0.5f, 0.f, 1.f, 1.f, // Cyan
+			-0.5f, 0.5f, 0.5f, 1.f, 0.64f, 0.0f, // Orange
+			-0.5f, 0.5f, -0.5f, 1.f, 0.75f, 0.79f // Pink
+		};
+
+		static constexpr unsigned int CUBE_COLOR_INDICES[] = {
+			1, 2, 3,
+			4, 7, 6,
+			4, 5, 1,
+			1, 5, 6,
+			6, 7, 3,
+			4, 0, 3,
+			0, 1, 3,
+			5, 4, 6,
+			0, 4, 1,
+			2, 1, 6,
+			2, 6, 3,
+			7, 4, 3
+		};
+
+
 		renderer.Init();
 
 		vao.Init();
-		vbo.Load(Data::CUBE_COLOR, sizeof(Data::CUBE_COLOR));
+		vbo.Load(CUBE_COLOR, sizeof(CUBE_COLOR));
 
 		VertexBufferLayout vboLayout;
 		vboLayout.Push<float>(3); // Positions
@@ -16,7 +43,7 @@ namespace GL {
 
 		vao.AddBuffer(vbo, vboLayout);
 
-		ibo.Load(Data::CUBE_COLOR_INDICES, 36);
+		ibo.Load(CUBE_COLOR_INDICES, 36);
 
 		program.Create(vsPath, fsPath);
 		program.LocateVariable("mvp");
