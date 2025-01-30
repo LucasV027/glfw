@@ -63,7 +63,15 @@ namespace GL {
         if (locations.contains(name)) {
             glUniformMatrix4fv(locations[name], 1, GL_FALSE, &matrix[0][0]);
         } else {
-            std::cout << "(SetUniform1f) Could not find uniform " << name << std::endl;
+            std::cout << "(SetUniformMat4f) Could not find uniform " << name << std::endl;
+        }
+    }
+
+    void Program::SetUniformVec3f(const std::string &name, const Color &vec3) {
+        if (locations.contains(name)) {
+            glUniform3f(locations[name], vec3.r, vec3.g, vec3.b);
+        } else {
+            std::cout << "(SetUniformVec3f) Could not find uniform " << name << std::endl;
         }
     }
 

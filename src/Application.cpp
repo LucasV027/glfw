@@ -17,6 +17,7 @@
 #include "TextureScene.h"
 #include "ClearColorScene.h"
 #include "CubeScene.h"
+#include "CircleScene.h"
 
 namespace GL {
 	Application::Application(const int width, const int height, const std::string &title)
@@ -97,7 +98,8 @@ namespace GL {
 		static const std::unordered_map<std::string, std::function<Scene*()> > sceneRegistry = {
 			{"Texture", [] { return new TextureScene(); }},
 			{"ClearColor", [] { return new ClearColorScene(); }},
-			{"Cube", [] { return new CubeScene(); }}
+			{"Cube", [] { return new CubeScene(); }},
+			{"Circle", [] { return new CircleScene(); }}
 		};
 
 		ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);

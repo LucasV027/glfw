@@ -6,6 +6,7 @@
 
 #include <glad/glad.h>
 
+#include "Color.h"
 #include "glm/fwd.hpp"
 
 namespace GL {
@@ -24,6 +25,8 @@ namespace GL {
         void SetUniform1f(const std::string &name, float value);
 
         void SetUniformMat4f(const std::string &name, const glm::mat4 &matrix);
+
+        void SetUniformVec3f(const std::string &name, const Color &vec3);
 
         void Bind() const;
 
