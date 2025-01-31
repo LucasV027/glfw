@@ -17,6 +17,8 @@ namespace GL {
 
         virtual void OnImGuiRender() {
         }
+
+        bool isUsingCamera = true;
     };
 }
 

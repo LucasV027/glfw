@@ -163,7 +163,7 @@ namespace GL {
 			glfwSetWindowShouldClose(window, GLFW_TRUE);
 		}
 
-		if (scene) {
+		if (scene && scene->isUsingCamera) {
 			CameraEvents();
 		}
 
