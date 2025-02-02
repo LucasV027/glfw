@@ -2,10 +2,6 @@
 
 namespace GL {
     SkyboxScene::SkyboxScene() {
-        SetPosition(glm::vec3(0.0f, 0.0f, -5.0f));
-        SetOrientation(glm::vec3(0.0f, 0.0f, 1.0f));
-        SetUp(glm::vec3(0.0f, 1.0f, 0.0f));
-
         renderer.Init();
 
         cubeVAO.Init();

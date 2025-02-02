@@ -10,7 +10,9 @@
 namespace GL {
     class Camera {
     public:
-        Camera();
+        explicit Camera(const glm::vec3 &position = glm::vec3(0.0f, 0.0f, -5.0f),
+                        const glm::vec3 &up = glm::vec3(0.0f, 1.0f, 0.0f),
+                        const glm::vec3 &orientation = glm::vec3(0.0f, 0.0f, 1.0f));
 
         void Compute(float fovDeg, float aspectRatio, float nearPlane, float farPlane);
 
@@ -18,26 +20,14 @@ namespace GL {
 
         [[nodiscard]] const glm::mat4 &GetProjectionMatrix() const;
 
-        [[nodiscard]] glm::vec3 &GetPosition();
-
-        [[nodiscard]] glm::vec3 &GetUp();
-
-        [[nodiscard]] glm::vec3 &GetOrientation();
-
-        void SetPosition(const glm::vec3 &position);
-
-        void SetOrientation(const glm::vec3 &orientation);
-
-        void SetUp(const glm::vec3 &up);
-
         void Update();
 
         // Input
         void ProcessInputs(InputSystem *inputSystem, double deltaTime);
 
-        void ProcessKeyboard(InputSystem *inputSystem, double deltaTime);
+        void ProcessKeyboard(const InputSystem *inputSystem, double deltaTime);
 
-        void ProcessMouse(InputSystem *inputSystem, double deltaTime);
+        void ProcessMouse(const InputSystem *inputSystem);
 
         void ProcessWindowResize(InputSystem *inputSystem);
 
@@ -49,10 +39,11 @@ namespace GL {
         glm::mat4 view = glm::mat4(1.0f);
         glm::mat4 proj = glm::mat4(1.0f);
 
-    protected:
+    private:
+        float aspectRatio = 0.0f;
         bool firstClick = true;
         int width{}, height{};
-        float speed = 0.1f;
+        float speed = 10.f;
         float sensitivity = 100.0f;
     };
 }
