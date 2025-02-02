@@ -1,6 +1,7 @@
 #pragma once
 
 #include <filesystem>
+#include <vector>
 
 #include <glad/glad.h>
 
@@ -13,20 +14,14 @@ namespace GL {
 
         void Load(const std::filesystem::path &filepath);
 
+        void LoadCubeMap(const std::vector<std::filesystem::path> &faces);
+
         void Bind(unsigned int slot = 0);
 
         void Unbind();
 
-        [[nodiscard]] int GetWidth() const;
-
-        [[nodiscard]] int GetHeight() const;
-
     private:
-        std::filesystem::path filepath;
-        unsigned char *buffer;
-        int width;
-        int height;
-        int bpp;
         GLuint id;
+        GLuint type;
     };
 }

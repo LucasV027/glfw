@@ -39,6 +39,8 @@ add_executable(${PROJECT_NAME}
         src/core/scene/CubeScene.cpp
         src/core/scene/CircleScene.cpp
         src/core/scene/CircleScene.h
+        src/core/scene/SkyboxScene.cpp
+        src/core/scene/SkyboxScene.h
 
         src/core/Camera.h
         src/core/Camera.cpp

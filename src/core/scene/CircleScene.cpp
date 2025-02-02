@@ -41,7 +41,7 @@ namespace GL {
 	}
 
 
-	void CircleScene::OnRender(const glm::mat4 &pv) {
+	void CircleScene::OnRender(const Camera& camera) {
 		renderer.Clear();
 		program.Bind();
 		program.SetUniformVec3f("circleColor", circleColor);

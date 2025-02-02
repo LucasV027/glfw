@@ -53,7 +53,7 @@ namespace GL {
         model = translate(glm::mat4(1.0f), translation);
     }
 
-    void TextureScene::OnRender(const glm::mat4 &pv) {
+    void TextureScene::OnRender(const Camera& camera) {
         renderer.Clear();
 
         program.Bind();

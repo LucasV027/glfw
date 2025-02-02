@@ -12,7 +12,7 @@ namespace GL {
 
         ~ClearColorScene() override = default;
 
-        void OnRender(const glm::mat4& pv) override;
+        void OnRender(const Camera& camera) override;
 
         void OnImGuiRender() override;
 

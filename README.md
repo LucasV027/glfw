@@ -16,3 +16,8 @@
 [Project Template 1](https://github.com/lszl84/glfw_opengl_cmake_template/tree/main)
 
 [Project Template 2](https://github.com/cmmw/imgui-glfw-glad-glm/tree/master)
+
+https://learnopengl.com/code_viewer_gh.php?code=includes/learnopengl/camera.h
+https://learnopengl.com/code_viewer_gh.php?code=src/4.advanced_opengl/6.1.cubemaps_skybox/cubemaps_skybox.cpp
+https://learnopengl.com/code_viewer.php?code=advanced/cubemaps_skybox_data
+https://learnopengl.com/Advanced-OpenGL/Cubemaps

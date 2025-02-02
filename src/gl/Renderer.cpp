@@ -20,5 +20,11 @@ namespace GL {
         program.Bind();
         glDrawElements(GL_TRIANGLES, ibo.GetCount(), GL_UNSIGNED_INT, nullptr);
     }
+
+    void Renderer::Draw(const VertexArray &vao, int first, int count ,const Program &program) {
+        vao.Bind();
+        program.Bind();
+        glDrawArrays(GL_TRIANGLES, first, count);
+    }
 }
 

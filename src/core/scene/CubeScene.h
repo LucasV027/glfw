@@ -16,7 +16,7 @@ namespace GL {
 
         void OnUpdate(double deltaTime) override;
 
-        void OnRender(const glm::mat4 &pv) override;
+        void OnRender(const Camera& camera) override;
 
         void OnImGuiRender() override;
 

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Camera.h"
 #include "glm/glm.hpp"
 
 namespace GL {
@@ -12,7 +13,7 @@ namespace GL {
         virtual void OnUpdate(double deltaTime) {
         }
 
-        virtual void OnRender(const glm::mat4& pv) {
+        virtual void OnRender(const Camera& camera) {
         }
 
         virtual void OnImGuiRender() {

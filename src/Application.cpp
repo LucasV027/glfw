@@ -18,6 +18,7 @@
 #include "ClearColorScene.h"
 #include "CubeScene.h"
 #include "CircleScene.h"
+#include "SkyboxScene.h"
 
 namespace GL {
 	Application::Application(const int width, const int height, const std::string &title)
@@ -99,7 +100,8 @@ namespace GL {
 			{"Texture", [] { return new TextureScene(); }},
 			{"ClearColor", [] { return new ClearColorScene(); }},
 			{"Cube", [] { return new CubeScene(); }},
-			{"Circle", [] { return new CircleScene(); }}
+			{"Circle", [] { return new CircleScene(); }},
+			{"Skybox", [] { return new SkyboxScene(); }}
 		};
 
 		ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
@@ -112,7 +114,6 @@ namespace GL {
 		} else {
 			for (const auto &[name, factory]: sceneRegistry) {
 				if (ImGui::Button(name.c_str())) {
-					delete scene;
 					scene = factory();
 					title = name;
 					glfwSetWindowTitle(window, title.c_str());
@@ -145,7 +146,7 @@ namespace GL {
 			if (scene) {
 				scene->OnImGuiRender();
 				scene->OnUpdate(deltaTime);
-				scene->OnRender(camera.GetProjectionMatrix() * camera.GetViewMatrix());
+				scene->OnRender(camera);
 			}
 
 			ImGui::Render();

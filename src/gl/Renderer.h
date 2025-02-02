@@ -13,6 +13,8 @@ namespace GL {
         void Clear(Color color = Colors::BLACK);
 
         void Draw(const VertexArray &vao, const IndexBuffer &ibo, const Program &program);
+
+        void Draw(const VertexArray &vao, int first, int count, const Program &program);
     };
 }
 

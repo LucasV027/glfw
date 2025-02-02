@@ -57,9 +57,9 @@ namespace GL {
 	}
 
 
-	void CubeScene::OnRender(const glm::mat4 &pv) {
+	void CubeScene::OnRender(const Camera& camera) {
 		program.Bind();
-		program.SetUniformMat4f("mvp", pv * model);
+		program.SetUniformMat4f("mvp", camera.GetProjectionMatrix() * camera.GetViewMatrix() * model);
 		renderer.Draw(vao, ibo, program);
 	}
 

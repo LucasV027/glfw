@@ -3,7 +3,7 @@
 #include "imgui.h"
 
 namespace GL {
-    void ClearColorScene::OnRender(const glm::mat4 &pv) {
+    void ClearColorScene::OnRender(const Camera& camera) {
         renderer.Clear(clearColor);
     }
 
