@@ -29,13 +29,18 @@ namespace GL {
         void ImGuiMenu();
 
         // Events
-        void HandleEvents();
+        void HandleResize(int newWidth, int newHeight);
+
+        void HandleKey(int key, int scancode, int action, int mods);
+
+        void HandleMouse(double xOffset, double yOffset, int button, int action, int mods);
 
     private:
         std::string title;
         int width;
         int height;
-        float aspectRatio;
+        double lastX; // Mouse X
+        double lastY; // Mouse Y
 
         GLFWwindow *window;
         Scene *scene;

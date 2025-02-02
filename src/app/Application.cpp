@@ -19,12 +19,12 @@
 #include "SkyboxScene.h"
 
 namespace GL {
-	Application::Application(const int width, const int height,  std::string &&title)
+	Application::Application(const int width, const int height, std::string &&title)
 		: title(title),
 		  width(width),
 		  height(height),
-		  aspectRatio(static_cast<float>(width) / static_cast<float>(height)),
-		  window(nullptr), scene(nullptr) {
+		  window(nullptr),
+		  scene(nullptr) {
 		InitGLFW();
 		CreateWindow();
 		InitGLAD();
@@ -53,6 +53,30 @@ namespace GL {
 			glfwTerminate();
 			throw std::runtime_error("Failed to create GLFW window.");
 		}
+
+		glfwSetWindowUserPointer(window, this);
+
+		glfwSetWindowSizeCallback(window, [](GLFWwindow *window, const int width, const int height) {
+			if (auto *_this = static_cast<Application *>(glfwGetWindowUserPointer(window))) {
+				_this->HandleResize(width, height);
+			}
+		});
+
+		glfwSetKeyCallback(window, [](GLFWwindow *window, int key, int scancode, int action, int mods) {
+			if (auto *_this = static_cast<Application *>(glfwGetWindowUserPointer(window))) {
+				_this->HandleKey(key, scancode, action, mods);
+			}
+		});
+
+		glfwSetMouseButtonCallback(window, [](GLFWwindow *window, int button, int action, int mods) {
+			if (auto *_this = static_cast<Application *>(glfwGetWindowUserPointer(window))) {
+				double newX, newY;
+				glfwGetCursorPos(window, &newX, &newY);
+				_this->HandleMouse(_this->lastX - newX, _this->lastY - newY, button, action, mods);
+				_this->lastX = newX;
+				_this->lastY = newY;
+			}
+		});
 
 		glfwMakeContextCurrent(window);
 		glfwSwapInterval(1); // V-Sync
@@ -96,6 +120,9 @@ namespace GL {
 		};
 
 		ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
+		ImGui::Text("Width: %i", width);
+		ImGui::Text("Height: %i", height);
+		ImGui::Text("AR: %.1f", (float) width / (float) height);
 
 		if (scene) {
 			if (ImGui::Button("<-")) {
@@ -111,6 +138,21 @@ namespace GL {
 				}
 			}
 		}
+	}
+
+	void Application::HandleResize(const int newWidth, const int newHeight) {
+		width = newWidth;
+		height = newHeight;
+		glViewport(0, 0, width, height);
+	}
+
+	void Application::HandleKey(int key, int scancode, int action, int mods) {
+		if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+			glfwSetWindowShouldClose(window, GLFW_TRUE);
+		}
+	}
+
+	void Application::HandleMouse(double xOffset, double yOffset, int button, int action, int mods) {
 	}
 
 	void Application::mainLoop() {
@@ -141,27 +183,8 @@ namespace GL {
 			ImGui::Render();
 			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-			HandleEvents();
 			glfwSwapBuffers(window);
 			glfwPollEvents();
-		}
-	}
-
-	void Application::HandleEvents() {
-		// Key events
-		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-			glfwSetWindowShouldClose(window, GLFW_TRUE);
-		}
-
-		// Resize event
-		int newWidth, newHeight;
-		glfwGetWindowSize(window, &newWidth, &newHeight);
-		if (newWidth != width || newHeight != height) {
-			glViewport(0, 0, newWidth, newHeight);
-
-			width = newWidth;
-			height = newHeight;
-			aspectRatio = static_cast<float>(width) / static_cast<float>(height);
 		}
 	}
 

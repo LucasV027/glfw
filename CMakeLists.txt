@@ -7,8 +7,8 @@ set(DATA_DIR \"${CMAKE_SOURCE_DIR}/res\")
 add_executable(${PROJECT_NAME}
         src/main.cpp
 
-        src/Application.cpp
-        src/Application.h
+        src/app/Application.cpp
+        src/app/Application.h
 
         src/gl/Program.cpp
         src/gl/Program.h
