@@ -5,6 +5,8 @@
 
 #include<glm/glm.hpp>
 
+#include "app/InputSystem.h"
+
 namespace GL {
     class Camera {
     public:
@@ -28,7 +30,16 @@ namespace GL {
 
         void SetUp(const glm::vec3 &up);
 
-        void ProcessEvents(GLFWwindow *window, double deltaTime);
+        void Update();
+
+        // Input
+        void ProcessInputs(InputSystem *inputSystem, double deltaTime);
+
+        void ProcessKeyboard(InputSystem *inputSystem, double deltaTime);
+
+        void ProcessMouse(InputSystem *inputSystem, double deltaTime);
+
+        void ProcessWindowResize(InputSystem *inputSystem);
 
     private:
         glm::vec3 position;
@@ -38,9 +49,9 @@ namespace GL {
         glm::mat4 view = glm::mat4(1.0f);
         glm::mat4 proj = glm::mat4(1.0f);
 
-        bool firstClick = true;
-        int width, height;
     protected:
+        bool firstClick = true;
+        int width{}, height{};
         float speed = 0.1f;
         float sensitivity = 100.0f;
     };

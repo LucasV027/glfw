@@ -28,7 +28,7 @@ namespace GL {
 		model = translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 	}
 
-	void CircleScene::OnUpdate(GLFWwindow *window, const double deltaTime) {
+	void CircleScene::OnUpdate(InputSystem *inputSystem, const double deltaTime) {
 		model = translate(glm::mat4(1.0f), translation);
 	}
 

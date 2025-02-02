@@ -3,7 +3,7 @@
 #include <glm/glm.hpp>
 
 #include "Scene.h"
-
+#include "Camera.h"
 #include "Renderer.h"
 #include "Texture.h"
 
@@ -14,7 +14,7 @@ namespace GL {
 
         ~CubeScene() override = default;
 
-        void OnUpdate(GLFWwindow *window, double deltaTime) override;
+        void OnUpdate(InputSystem *inputSystem, double deltaTime) override;
 
         void OnRender() override;
 

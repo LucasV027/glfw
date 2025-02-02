@@ -35,7 +35,7 @@ namespace GL {
         program.SetUniform1i("u_Texture", slot);
     }
 
-    void TextureScene::OnUpdate(GLFWwindow *window, double deltaTime) {
+    void TextureScene::OnUpdate(InputSystem *inputSystem, double deltaTime) {
         model = translate(glm::mat4(1.0f), translation);
     }
 

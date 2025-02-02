@@ -5,8 +5,6 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtx/vector_angle.hpp"
 
-#include "imgui.h"
-
 namespace GL {
 	Camera::Camera() : position(0.0f, 0.0f, 0.0f),
 	                   up(0.f, 1.f, 0.f),
@@ -38,7 +36,6 @@ namespace GL {
 		return orientation;
 	}
 
-
 	void Camera::SetPosition(const glm::vec3 &position) {
 		this->position = position;
 	}
@@ -51,63 +48,49 @@ namespace GL {
 		this->up = up;
 	}
 
-	void Camera::ProcessEvents(GLFWwindow *window, double deltaTime) {
-		glfwGetWindowSize(window, &width, &height);
+	void Camera::Update() {
+		const float aspectRatio = static_cast<float>(width) / static_cast<float>(height);
+		Compute(45.f, aspectRatio, 0.1f, 100.0f);
+	}
 
-		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-			position += speed * orientation;
-		}
-		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-			position += speed * -glm::normalize(glm::cross(orientation, up));
-		}
-		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-			position += speed * -orientation;
-		}
-		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-			position += speed * glm::normalize(glm::cross(orientation, up));
-		}
-		if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
-			position += speed * up;
-		}
-		if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) {
-			position += speed * -up;
-		}
+	void Camera::ProcessInputs(InputSystem *inputSystems, const double deltaTime) {
+		ProcessKeyboard(inputSystems, deltaTime);
+		ProcessMouse(inputSystems, deltaTime);
+		ProcessWindowResize(inputSystems);
+	}
 
-		// Adjust speed
-		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
-			speed = 0.4f;
-		} else if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE) {
-			speed = 0.1f;
-		}
+	void Camera::ProcessKeyboard(InputSystem *inputSystem, const double deltaTime) {
+		if (inputSystem->IsKeyPressed(GLFW_KEY_W)) position += speed * orientation;
+		if (inputSystem->IsKeyPressed(GLFW_KEY_S)) position -= speed * orientation;
+		if (inputSystem->IsKeyPressed(GLFW_KEY_D)) position += speed * normalize(cross(orientation, up));
+		if (inputSystem->IsKeyPressed(GLFW_KEY_A)) position -= speed * normalize(cross(orientation, up));
+		if (inputSystem->IsKeyPressed(GLFW_KEY_SPACE)) position += speed * up;
+		if (inputSystem->IsKeyPressed(GLFW_KEY_LEFT_CONTROL)) position -= speed * up;
+		if (inputSystem->IsKeyPressed(GLFW_KEY_LEFT_SHIFT)) speed = 0.4f;
+		if (!inputSystem->IsKeyPressed(GLFW_KEY_LEFT_SHIFT)) speed = 0.1f;
+	}
 
-		// Check if ImGui is interacting
-		if (ImGui::GetIO().WantCaptureMouse) {
-			// Do not process camera inputs if ImGui is active
-			return;
-		}
-
-		// Handles mouse inputs
-		if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
+	void Camera::ProcessMouse(InputSystem *inputSystem, const double deltaTime) {
+		if (inputSystem->IsMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT)) {
 			// Hides mouse cursor
-			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+			inputSystem->SetCursorVisibility(false);
 
-			// Prevents camera from jumping on the first click
+			// PrinputSystems camera from jumping on the first click
 			if (firstClick) {
-				glfwSetCursorPos(window, (width / 2), (height / 2));
+				inputSystem->SetMousePosition(width / 2, height / 2);
 				firstClick = false;
 			}
 
 			// Stores the coordinates of the cursor
 			double mouseX, mouseY;
-			glfwGetCursorPos(window, &mouseX, &mouseY);
+			inputSystem->GetMousePosition(&mouseX, &mouseY);
 
 			// Normalizes and shifts the coordinates of the cursor
 			float rotX = sensitivity * static_cast<float>(mouseY - (height / 2)) / height;
 			float rotY = sensitivity * static_cast<float>(mouseX - (width / 2)) / width;
 
 			// Calculate upcoming vertical change in the orientation
-			glm::vec3 newOrientation = glm::rotate(orientation, glm::radians(-rotX),
-			                                       glm::normalize(glm::cross(orientation, up)));
+			glm::vec3 newOrientation = rotate(orientation, glm::radians(-rotX), normalize(cross(orientation, up)));
 
 			// Ensure the vertical orientation stays within legal bounds
 			if (abs(glm::angle(newOrientation, up) - glm::radians(90.0f)) <= glm::radians(85.0f)) {
@@ -118,16 +101,19 @@ namespace GL {
 			orientation = glm::rotate(orientation, glm::radians(-rotY), up);
 
 			// Center the cursor on the screen
-			glfwSetCursorPos(window, (width / 2), (height / 2));
-		} else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE) {
+			inputSystem->SetMousePosition(width / 2, height / 2);
+		} else if (!inputSystem->IsMouseButtonPressed(GLFW_RELEASE)) {
 			// Unhides cursor since camera is not looking around anymore
-			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+			inputSystem->SetCursorVisibility(true);
 
 			// Reset first click state
 			firstClick = true;
 		}
+	}
 
-		const float aspectRatio = static_cast<float>(width) / static_cast<float>(height);
-		Compute(45.f, aspectRatio, 0.1f, 100.0f);
+	void Camera::ProcessWindowResize(InputSystem *inputSystem) {
+		if (inputSystem->ResizeEvent()) {
+			inputSystem->GetWindowSize(&width, &height);
+		}
 	}
 }

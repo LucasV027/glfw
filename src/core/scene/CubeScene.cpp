@@ -26,8 +26,9 @@ namespace GL {
 		program.LocateVariable("mvp");
 	}
 
-	void CubeScene::OnUpdate(GLFWwindow *window, const double deltaTime) {
-		ProcessEvents(window, deltaTime);
+	void CubeScene::OnUpdate(InputSystem *inputSystem, const double deltaTime) {
+		Camera::ProcessInputs(inputSystem, deltaTime);
+		Camera::Update();
 
 		model = glm::mat4(1.0f);
 		rotationMatrix = rotate(rotationMatrix, rotationSpeed * (float) deltaTime, normalize(rotationAxis));

@@ -21,7 +21,7 @@ namespace GL {
 
         ~TextureScene() override = default;
 
-        void OnUpdate(GLFWwindow *window, double deltaTime) override;
+        void OnUpdate(InputSystem *inputSystem, double deltaTime) override;
 
         void OnRender() override;
 

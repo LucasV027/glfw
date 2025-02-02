@@ -9,6 +9,8 @@ add_executable(${PROJECT_NAME}
 
         src/app/Application.cpp
         src/app/Application.h
+        src/app/InputSystem.cpp
+        src/app/InputSystem.h
 
         src/gl/Program.cpp
         src/gl/Program.h

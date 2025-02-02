@@ -54,29 +54,7 @@ namespace GL {
 			throw std::runtime_error("Failed to create GLFW window.");
 		}
 
-		glfwSetWindowUserPointer(window, this);
-
-		glfwSetWindowSizeCallback(window, [](GLFWwindow *window, const int width, const int height) {
-			if (auto *_this = static_cast<Application *>(glfwGetWindowUserPointer(window))) {
-				_this->HandleResize(width, height);
-			}
-		});
-
-		glfwSetKeyCallback(window, [](GLFWwindow *window, int key, int scancode, int action, int mods) {
-			if (auto *_this = static_cast<Application *>(glfwGetWindowUserPointer(window))) {
-				_this->HandleKey(key, scancode, action, mods);
-			}
-		});
-
-		glfwSetMouseButtonCallback(window, [](GLFWwindow *window, int button, int action, int mods) {
-			if (auto *_this = static_cast<Application *>(glfwGetWindowUserPointer(window))) {
-				double newX, newY;
-				glfwGetCursorPos(window, &newX, &newY);
-				_this->HandleMouse(_this->lastX - newX, _this->lastY - newY, button, action, mods);
-				_this->lastX = newX;
-				_this->lastY = newY;
-			}
-		});
+		inputSystem.Init(window, &width, &height);
 
 		glfwMakeContextCurrent(window);
 		glfwSwapInterval(1); // V-Sync
@@ -134,26 +112,13 @@ namespace GL {
 				if (ImGui::Button(name.c_str())) {
 					scene = factory();
 					title = name;
+					inputSystem.SetResizeEvent(true); // Trigger the scene to update width & height
 					glfwSetWindowTitle(window, title.c_str());
 				}
 			}
 		}
 	}
 
-	void Application::HandleResize(const int newWidth, const int newHeight) {
-		width = newWidth;
-		height = newHeight;
-		glViewport(0, 0, width, height);
-	}
-
-	void Application::HandleKey(int key, int scancode, int action, int mods) {
-		if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-			glfwSetWindowShouldClose(window, GLFW_TRUE);
-		}
-	}
-
-	void Application::HandleMouse(double xOffset, double yOffset, int button, int action, int mods) {
-	}
 
 	void Application::mainLoop() {
 		double currentFrame = glfwGetTime();
@@ -173,10 +138,9 @@ namespace GL {
 			ImGui::NewFrame();
 			ImGuiMenu();
 
-
 			if (scene) {
 				scene->OnImGuiRender();
-				scene->OnUpdate(window, deltaTime);
+				scene->OnUpdate(&inputSystem, deltaTime);
 				scene->OnRender();
 			}
 

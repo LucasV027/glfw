@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Scene.h"
+#include "Camera.h"
 
 #include "VertexBuffer.h"
 #include "VertexArray.h"
@@ -9,7 +10,6 @@
 #include "Program.h"
 #include "Renderer.h"
 
-
 namespace GL {
     class SkyboxScene final : public Scene, Camera {
     public:
@@ -17,7 +17,7 @@ namespace GL {
 
         ~SkyboxScene() override = default;
 
-        void OnUpdate(GLFWwindow *window, double deltaTime) override;
+        void OnUpdate(InputSystem *inputSystem, double deltaTime) override;
 
         void OnRender() override;
 

@@ -1,9 +1,6 @@
 #pragma once
 
-#include "Camera.h"
-
-#include <glad/glad.h> // Do not remove
-#include "GLFW/glfw3.h"
+#include "app/InputSystem.h"
 
 namespace GL {
     class Scene {
@@ -12,7 +9,7 @@ namespace GL {
 
         virtual ~Scene() = default;
 
-        virtual void OnUpdate(GLFWwindow *window, double deltaTime) {
+        virtual void OnUpdate(InputSystem *inputSystem, double deltaTime) {
         }
 
         virtual void OnRender() {
@@ -20,8 +17,6 @@ namespace GL {
 
         virtual void OnImGuiRender() {
         }
-
-        bool isUsingCamera = true;
     };
 }
 

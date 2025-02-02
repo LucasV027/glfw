@@ -40,8 +40,9 @@ namespace GL {
         skyboxProgram.SetUniform1i("skybox", slot);
     }
 
-    void SkyboxScene::OnUpdate(GLFWwindow *window, double deltaTime) {
-        ProcessEvents(window, deltaTime);
+    void SkyboxScene::OnUpdate(InputSystem *inputSystem, const double deltaTime) {
+        Camera::ProcessInputs(inputSystem, deltaTime);
+        Camera::Update();
     }
 
     void SkyboxScene::OnRender() {
