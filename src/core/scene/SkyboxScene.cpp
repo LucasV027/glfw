@@ -2,6 +2,10 @@
 
 namespace GL {
     SkyboxScene::SkyboxScene() {
+        SetPosition(glm::vec3(0.0f, 0.0f, -5.0f));
+        SetOrientation(glm::vec3(0.0f, 0.0f, 1.0f));
+        SetUp(glm::vec3(0.0f, 1.0f, 0.0f));
+
         constexpr float CUBE[] = {
             // positions
             -1.0f, 1.0f, -1.0f,
@@ -117,22 +121,23 @@ namespace GL {
         skyboxProgram.SetUniform1i("skybox", slot);
     }
 
-    void SkyboxScene::OnUpdate(double deltaTime) {
+    void SkyboxScene::OnUpdate(GLFWwindow *window, double deltaTime) {
+        ProcessEvents(window, deltaTime);
     }
 
-    void SkyboxScene::OnRender(const Camera &camera) {
+    void SkyboxScene::OnRender() {
         glDepthMask(GL_FALSE);
 
         renderer.Clear();
 
         skyboxProgram.Bind();
-        skyboxProgram.SetUniformMat4f("mvp", camera.GetProjectionMatrix() * glm::mat4(glm::mat3(camera.GetViewMatrix())));
+        skyboxProgram.SetUniformMat4f("mvp", GetProjectionMatrix() * glm::mat4(glm::mat3(GetViewMatrix())));
         renderer.Draw(skyboxVAO, 0, 36, skyboxProgram);
 
         glDepthMask(GL_TRUE);
 
         cubeProgram.Bind();
-        cubeProgram.SetUniformMat4f("mvp", camera.GetProjectionMatrix() * camera.GetViewMatrix());
+        cubeProgram.SetUniformMat4f("mvp", GetProjectionMatrix() * GetViewMatrix());
         renderer.Draw(cubeVAO, cubeIBO, cubeProgram);
     }
 

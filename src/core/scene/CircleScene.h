@@ -30,9 +30,9 @@ namespace GL {
 
         ~CircleScene() override = default;
 
-        void OnUpdate(double deltaTime) override;
+        void OnUpdate(GLFWwindow *window, double deltaTime) override;
 
-        void OnRender(const Camera& camera) override;
+        void OnRender() override;
 
         void OnImGuiRender() override;
 

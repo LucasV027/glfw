@@ -1,7 +1,9 @@
 #pragma once
 
 #include "Camera.h"
-#include "glm/glm.hpp"
+
+#include <glad/glad.h> // Do not remove
+#include "GLFW/glfw3.h"
 
 namespace GL {
     class Scene {
@@ -10,10 +12,10 @@ namespace GL {
 
         virtual ~Scene() = default;
 
-        virtual void OnUpdate(double deltaTime) {
+        virtual void OnUpdate(GLFWwindow *window, double deltaTime) {
         }
 
-        virtual void OnRender(const Camera& camera) {
+        virtual void OnRender() {
         }
 
         virtual void OnImGuiRender() {

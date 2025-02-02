@@ -1,5 +1,8 @@
 #pragma once
 
+#include <glad/glad.h> // Do not remove
+#include <GLFW/glfw3.h>
+
 #include<glm/glm.hpp>
 
 namespace GL {
@@ -25,6 +28,8 @@ namespace GL {
 
         void SetUp(const glm::vec3 &up);
 
+        void ProcessEvents(GLFWwindow *window, double deltaTime);
+
     private:
         glm::vec3 position;
         glm::vec3 up;
@@ -32,5 +37,11 @@ namespace GL {
 
         glm::mat4 view = glm::mat4(1.0f);
         glm::mat4 proj = glm::mat4(1.0f);
+
+        bool firstClick = true;
+        int width, height;
+    protected:
+        float speed = 0.1f;
+        float sensitivity = 100.0f;
     };
 }

@@ -8,15 +8,15 @@
 #include "Texture.h"
 
 namespace GL {
-    class CubeScene final : public Scene {
+    class CubeScene final : public Scene, Camera {
     public:
         CubeScene();
 
         ~CubeScene() override = default;
 
-        void OnUpdate(double deltaTime) override;
+        void OnUpdate(GLFWwindow *window, double deltaTime) override;
 
-        void OnRender(const Camera& camera) override;
+        void OnRender() override;
 
         void OnImGuiRender() override;
 

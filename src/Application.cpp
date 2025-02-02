@@ -4,14 +4,12 @@
 #include <format>
 #include <functional>
 
+#include "glad/glad.h" // Do not remove
+#include "GLFW/glfw3.h"
+
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
-
-#define GLM_ENABLE_EXPERIMENTAL
-#include "glm/glm.hpp"
-#include "glm/gtc/matrix_transform.hpp"
-#include "glm/gtx/vector_angle.hpp"
 
 #include "Debug.h"
 #include "TextureScene.h"
@@ -21,18 +19,17 @@
 #include "SkyboxScene.h"
 
 namespace GL {
-	Application::Application(const int width, const int height, const std::string &title)
+	Application::Application(const int width, const int height,  std::string &&title)
 		: title(title),
 		  width(width),
 		  height(height),
 		  aspectRatio(static_cast<float>(width) / static_cast<float>(height)),
-		  window(nullptr), camera(), scene(nullptr) {
+		  window(nullptr), scene(nullptr) {
 		InitGLFW();
 		CreateWindow();
 		InitGLAD();
 		ConfigureOpenGL();
 		InitImGui();
-		InitCamera();
 	}
 
 	void Application::InitGLFW() {
@@ -89,12 +86,6 @@ namespace GL {
 		ImGui::StyleColorsClassic();
 	}
 
-	void Application::InitCamera() {
-		camera.SetPosition(glm::vec3(0.0f, 0.0f, -5.0f));
-		camera.SetOrientation(glm::vec3(0.0f, 0.0f, 1.0f));
-		camera.SetUp(glm::vec3(0.0f, 1.0f, 0.0f));
-	}
-
 	void Application::ImGuiMenu() {
 		static const std::unordered_map<std::string, std::function<Scene*()> > sceneRegistry = {
 			{"Texture", [] { return new TextureScene(); }},
@@ -117,7 +108,6 @@ namespace GL {
 					scene = factory();
 					title = name;
 					glfwSetWindowTitle(window, title.c_str());
-					InitCamera();
 				}
 			}
 		}
@@ -141,12 +131,11 @@ namespace GL {
 			ImGui::NewFrame();
 			ImGuiMenu();
 
-			camera.Compute(45.f, aspectRatio, 0.1f, 100.0f);
 
 			if (scene) {
 				scene->OnImGuiRender();
-				scene->OnUpdate(deltaTime);
-				scene->OnRender(camera);
+				scene->OnUpdate(window, deltaTime);
+				scene->OnRender();
 			}
 
 			ImGui::Render();
@@ -164,10 +153,6 @@ namespace GL {
 			glfwSetWindowShouldClose(window, GLFW_TRUE);
 		}
 
-		if (scene && scene->isUsingCamera) {
-			CameraEvents();
-		}
-
 		// Resize event
 		int newWidth, newHeight;
 		glfwGetWindowSize(window, &newWidth, &newHeight);
@@ -179,87 +164,6 @@ namespace GL {
 			aspectRatio = static_cast<float>(width) / static_cast<float>(height);
 		}
 	}
-
-	void Application::CameraEvents() {
-		// Handles key inputs
-		glm::vec3 &position = camera.GetPosition();
-		glm::vec3 &orientation = camera.GetOrientation();
-		const glm::vec3 &up = camera.GetUp();
-
-		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-			position += speed * orientation;
-		}
-		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-			position += speed * -glm::normalize(glm::cross(orientation, up));
-		}
-		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-			position += speed * -orientation;
-		}
-		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-			position += speed * glm::normalize(glm::cross(orientation, up));
-		}
-		if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
-			position += speed * up;
-		}
-		if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) {
-			position += speed * -up;
-		}
-
-		// Adjust speed
-		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
-			speed = 0.4f;
-		} else if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE) {
-			speed = 0.1f;
-		}
-
-		// Check if ImGui is interacting
-		if (ImGui::GetIO().WantCaptureMouse) {
-			// Do not process camera inputs if ImGui is active
-			return;
-		}
-
-		// Handles mouse inputs
-		if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
-			// Hides mouse cursor
-			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-
-			// Prevents camera from jumping on the first click
-			if (firstClick) {
-				glfwSetCursorPos(window, (width / 2), (height / 2));
-				firstClick = false;
-			}
-
-			// Stores the coordinates of the cursor
-			double mouseX, mouseY;
-			glfwGetCursorPos(window, &mouseX, &mouseY);
-
-			// Normalizes and shifts the coordinates of the cursor
-			float rotX = sensitivity * static_cast<float>(mouseY - (height / 2)) / height;
-			float rotY = sensitivity * static_cast<float>(mouseX - (width / 2)) / width;
-
-			// Calculate upcoming vertical change in the orientation
-			glm::vec3 newOrientation = glm::rotate(orientation, glm::radians(-rotX),
-			                                       glm::normalize(glm::cross(orientation, up)));
-
-			// Ensure the vertical orientation stays within legal bounds
-			if (abs(glm::angle(newOrientation, up) - glm::radians(90.0f)) <= glm::radians(85.0f)) {
-				orientation = newOrientation;
-			}
-
-			// Rotate the orientation left and right
-			orientation = glm::rotate(orientation, glm::radians(-rotY), up);
-
-			// Center the cursor on the screen
-			glfwSetCursorPos(window, (width / 2), (height / 2));
-		} else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE) {
-			// Unhides cursor since camera is not looking around anymore
-			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-
-			// Reset first click state
-			firstClick = true;
-		}
-	}
-
 
 	Application::~Application() {
 		ImGui_ImplOpenGL3_Shutdown();

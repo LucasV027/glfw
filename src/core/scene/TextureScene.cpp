@@ -49,11 +49,11 @@ namespace GL {
         program.SetUniform1i("u_Texture", slot);
     }
 
-    void TextureScene::OnUpdate(double deltaTime) {
+    void TextureScene::OnUpdate(GLFWwindow *window, double deltaTime) {
         model = translate(glm::mat4(1.0f), translation);
     }
 
-    void TextureScene::OnRender(const Camera& camera) {
+    void TextureScene::OnRender() {
         renderer.Clear();
 
         program.Bind();

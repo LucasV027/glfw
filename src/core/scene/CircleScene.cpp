@@ -36,12 +36,12 @@ namespace GL {
 		model = translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 	}
 
-	void CircleScene::OnUpdate(const double deltaTime) {
+	void CircleScene::OnUpdate(GLFWwindow *window, const double deltaTime) {
 		model = translate(glm::mat4(1.0f), translation);
 	}
 
 
-	void CircleScene::OnRender(const Camera& camera) {
+	void CircleScene::OnRender() {
 		renderer.Clear();
 		program.Bind();
 		program.SetUniformVec3f("circleColor", circleColor);

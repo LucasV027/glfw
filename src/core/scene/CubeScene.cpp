@@ -5,6 +5,10 @@
 
 namespace GL {
 	CubeScene::CubeScene() {
+		SetPosition(glm::vec3(0.0f, 0.0f, -5.0f));
+		SetOrientation(glm::vec3(0.0f, 0.0f, 1.0f));
+		SetUp(glm::vec3(0.0f, 1.0f, 0.0f));
+
 		static constexpr float CUBE_COLOR[] = {
 			0.5f, -0.5f, -0.5f, 1.f, 0.f, 0.f, // Red
 			0.5f, -0.5f, 0.5f, 0.f, 1.f, 0.f, // Green
@@ -49,7 +53,9 @@ namespace GL {
 		program.LocateVariable("mvp");
 	}
 
-	void CubeScene::OnUpdate(const double deltaTime) {
+	void CubeScene::OnUpdate(GLFWwindow *window, const double deltaTime) {
+		ProcessEvents(window, deltaTime);
+
 		model = glm::mat4(1.0f);
 		rotationMatrix = rotate(rotationMatrix, rotationSpeed * (float) deltaTime, normalize(rotationAxis));
 		model = rotationMatrix;
@@ -57,9 +63,9 @@ namespace GL {
 	}
 
 
-	void CubeScene::OnRender(const Camera& camera) {
+	void CubeScene::OnRender() {
 		program.Bind();
-		program.SetUniformMat4f("mvp", camera.GetProjectionMatrix() * camera.GetViewMatrix() * model);
+		program.SetUniformMat4f("mvp", GetProjectionMatrix() * GetViewMatrix() * model);
 		renderer.Draw(vao, ibo, program);
 	}
 
