@@ -38,8 +38,21 @@ namespace GL {
         glm::mat4 proj{}, view{}, model{};
         glm::vec3 translation{};
 
+        // Data
         const std::filesystem::path fsPath = DATA_DIR "/shaders/texture.frag";
         const std::filesystem::path vsPath = DATA_DIR "/shaders/texture.vert";
+
+        static constexpr float SQUARE_UV[] = {
+            300.f, 200.f, -0.5f, 0.0f, 0.0f,
+            500.f, 200.f, -0.5f, 1.0f, 0.0f,
+            500.f, 400.f, -0.5f, 1.0f, 1.0f,
+            300.f, 400.f, -0.5f, 0.0f, 1.0f
+        };
+
+        static constexpr unsigned int SQUARE_UV_INDICES[] = {
+            0, 1, 2,
+            2, 3, 0
+        };
     };
 };
 

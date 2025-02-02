@@ -7,20 +7,6 @@
 
 namespace GL {
     TextureScene::TextureScene() {
-        static constexpr float SQUARE_UV[] =
-        {
-            300.f, 200.f, -0.5f, 0.0f, 0.0f,
-            500.f, 200.f, -0.5f, 1.0f, 0.0f,
-            500.f, 400.f, -0.5f, 1.0f, 1.0f,
-            300.f, 400.f, -0.5f, 0.0f, 1.0f
-        };
-
-        static constexpr unsigned int SQUARE_UV_INDICES[] = {
-            0, 1, 2,
-            2, 3, 0
-        };
-
-
         // VAO VBO & IBO
         vao.Init();
         vbo.Load(SQUARE_UV, sizeof(SQUARE_UV));
@@ -54,8 +40,6 @@ namespace GL {
     }
 
     void TextureScene::OnRender() {
-        renderer.Clear();
-
         program.Bind();
         program.SetUniformMat4f("mvp", proj * view * model);
         renderer.Draw(vao, ibo, program);

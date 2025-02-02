@@ -5,18 +5,10 @@
 
 namespace GL {
 	CircleScene::CircleScene() {
-
-		const Circle CIRCLE{300.f, 300.f};
-
-		static constexpr unsigned int SQUARE_INDICES[] = {
-			0, 1, 2,
-			2, 3, 0
-		};
-
 		renderer.Init();
 
 		vao.Init();
-		vbo.Load(CIRCLE.vertices, sizeof(CIRCLE.vertices));
+		vbo.Load(SQUARE_UV, sizeof(SQUARE_UV));
 
 		VertexBufferLayout vboLayout;
 		vboLayout.Push<float>(2); // Positions
@@ -42,7 +34,6 @@ namespace GL {
 
 
 	void CircleScene::OnRender() {
-		renderer.Clear();
 		program.Bind();
 		program.SetUniformVec3f("circleColor", circleColor);
 		program.SetUniformMat4f("mvp", proj * view * model);
