@@ -23,6 +23,8 @@ namespace GL {
 
         void GetMousePosition(double *xPos, double *yPos) const;
 
+        bool IsMouseFree() const;
+
         bool ResizeEvent() const;
 
         void SetResizeEvent(bool resizeEvent);

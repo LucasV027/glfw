@@ -6,7 +6,6 @@
 #include "glm/gtx/vector_angle.hpp"
 
 namespace GL {
-
 	Camera::Camera(const glm::vec3 &position, const glm::vec3 &up, const glm::vec3 &orientation) : position(position), up(up),
 	                                                                                               orientation(orientation) {
 	}
@@ -47,7 +46,7 @@ namespace GL {
 	}
 
 	void Camera::ProcessMouse(const InputSystem *inputSystem) {
-		if (inputSystem->IsMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT)) {
+		if (inputSystem->IsMouseFree() && inputSystem->IsMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT)) {
 			inputSystem->SetCursorVisibility(false);
 
 			// Prevent camera from jumping on the first click

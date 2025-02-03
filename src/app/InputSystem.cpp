@@ -55,12 +55,15 @@ namespace GL {
     }
 
     void InputSystem::SetMousePosition(const double xPos, const double yPos) const {
-        if (ImGui::GetIO().WantCaptureMouse) return;
         glfwSetCursorPos(window, xPos, yPos);
     }
 
     void InputSystem::GetMousePosition(double *xPos, double *yPos) const {
         glfwGetCursorPos(window, xPos, yPos);
+    }
+
+    bool InputSystem::IsMouseFree() const {
+        return !ImGui::GetIO().WantCaptureMouse;
     }
 
     bool InputSystem::ResizeEvent() const { return resizeEvent; }
