@@ -10,11 +10,16 @@ namespace GL {
     public:
         void Init() const;
 
+        void SetPolygonMode(bool state) const;
+
         void Clear(Color color = Colors::BLACK);
 
         void Draw(const VertexArray &vao, const IndexBuffer &ibo, const Program &program);
 
         void Draw(const VertexArray &vao, int first, int count, const Program &program);
+
+    private:
+        mutable bool currentPolygonState = true;
     };
 }
 

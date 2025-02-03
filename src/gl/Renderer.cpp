@@ -2,11 +2,17 @@
 
 namespace GL {
     void Renderer::Init() const {
-        // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
         glEnable(GL_CULL_FACE); // cull face
         glCullFace(GL_BACK); // cull back face
         glFrontFace(GL_CCW); // GL_CCW for counter clock-wise
+        glEnable(GL_DEPTH_TEST);
+    }
+
+    void Renderer::SetPolygonMode(const bool state) const {
+        if (currentPolygonState != state) {
+            glPolygonMode(GL_FRONT_AND_BACK, state ? GL_FILL : GL_LINE);
+            currentPolygonState = state;
+        }
     }
 
     void Renderer::Clear(const Color color) {
@@ -21,7 +27,7 @@ namespace GL {
         glDrawElements(GL_TRIANGLES, ibo.GetCount(), GL_UNSIGNED_INT, nullptr);
     }
 
-    void Renderer::Draw(const VertexArray &vao, int first, int count ,const Program &program) {
+    void Renderer::Draw(const VertexArray &vao, int first, int count, const Program &program) {
         vao.Bind();
         program.Bind();
         glDrawArrays(GL_TRIANGLES, first, count);
