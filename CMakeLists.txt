@@ -29,9 +29,6 @@ add_executable(${PROJECT_NAME}
         src/gl/Texture.h
         src/gl/Texture.cpp
 
-        src/utils/Color.h
-        src/utils/Color.cpp
-
         src/core/scene/Scene.h
         src/core/scene/TextureScene.h
         src/core/scene/TextureScene.cpp
@@ -52,8 +49,10 @@ add_executable(${PROJECT_NAME}
         src/extern/stb_image.h
         src/extern/stb_image.cpp
 
-        src/utils/Loader.h
-        src/utils/Loader.cpp
+        src/utils/Color.h
+        src/utils/Color.cpp
+        src/utils/OBJParser.h
+        src/utils/OBJParser.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE src src/extern src/gl src/core/scene src/utils src/core)
