@@ -16,6 +16,7 @@
 #include "ClearColorScene.h"
 #include "CubeScene.h"
 #include "CircleScene.h"
+#include "ImportScene.h"
 #include "SkyboxScene.h"
 
 namespace GL {
@@ -94,7 +95,8 @@ namespace GL {
 			{"ClearColor", [] { return new ClearColorScene(); }},
 			{"Cube", [] { return new CubeScene(); }},
 			{"Circle", [] { return new CircleScene(); }},
-			{"Skybox", [] { return new SkyboxScene(); }}
+			{"Skybox", [] { return new SkyboxScene(); }},
+			{"Import", [] { return new ImportScene(); }}
 		};
 
 		ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);

@@ -43,6 +43,8 @@ add_executable(${PROJECT_NAME}
         src/core/scene/CircleScene.h
         src/core/scene/SkyboxScene.cpp
         src/core/scene/SkyboxScene.h
+        src/core/scene/ImportScene.cpp
+        src/core/scene/ImportScene.h
 
         src/core/Camera.h
         src/core/Camera.cpp
