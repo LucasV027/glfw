@@ -5,7 +5,9 @@ namespace GL {
         glEnable(GL_CULL_FACE); // cull face
         glCullFace(GL_BACK); // cull back face
         glFrontFace(GL_CCW); // GL_CCW for counter clock-wise
+
         glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LESS);
     }
 
     void Renderer::SetPolygonMode(const bool state) const {

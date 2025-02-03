@@ -11,7 +11,7 @@ namespace GL {
 
         ~VertexBuffer();
 
-        void Load(const void *data, int size);
+        void Load(const void *data, unsigned int size);
 
         void Bind() const;
 
