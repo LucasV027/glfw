@@ -2,7 +2,7 @@
 
 int main() {
     GL::Application app(800, 600, "Hello world !");
-    app.mainLoop();
+    app.Run();
 
     return 0;
 }

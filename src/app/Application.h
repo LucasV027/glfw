@@ -9,7 +9,7 @@ namespace GL {
     public:
         Application(int width, int height, std::string &&title);
 
-        void mainLoop();
+        void Run();
 
         ~Application();
 

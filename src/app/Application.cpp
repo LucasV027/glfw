@@ -122,7 +122,7 @@ namespace GL {
 	}
 
 
-	void Application::mainLoop() {
+	void Application::Run() {
 		double currentFrame = glfwGetTime();
 		double lastFrame = currentFrame;
 		double deltaTime;
